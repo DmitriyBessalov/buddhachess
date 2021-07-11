@@ -1,17 +1,16 @@
-from fastapi import FastAPI, Request
-from starlette.responses import HTMLResponse
+from fastapi import FastAPI
 import uvicorn
-from apps.article.router import router
-from fastapi.templating import Jinja2Templates
+from apps.article.router import router as article_router
+from apps.auth.router import router as auth_router
 from fastapi.staticfiles import StaticFiles
 from settings import settings
 
-
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
-app.include_router(router, prefix="/game")
+app.include_router(article_router, prefix="/game", tags=['game'])
+app.include_router(auth_router, prefix="/users", tags=["auth"],)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 if __name__ == "__main__":
     uvicorn.run(
@@ -21,12 +20,3 @@ if __name__ == "__main__":
         reload=True,
     )
 
-
-# @app.get("/")
-# async def get(request: Request):
-#     return HTMLResponse("<html>/root</html>")
-#
-#
-# @app.get("/test_template/{id}", response_class=HTMLResponse)
-# async def get(request: Request, id: str):
-#     return templates.TemplateResponse("base.html", {"request": request, "id": id})

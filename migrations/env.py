@@ -6,6 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from db import Base, SQLALCHEMY_DATABASE_URL
+from apps.auth.models import User
 from apps.game.models import Game
 
 # this is the Alembic Config object, which provides
