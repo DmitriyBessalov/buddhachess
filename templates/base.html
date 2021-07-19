@@ -1,10 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  {% block title %}
+  <title>Шахматы будды</title>
+  {% endblock %}
+  <link rel="stylesheet" href="/static/mdb/css/mdb.min.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"/>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"/>
+  <link rel="stylesheet" href="/static/css/static.css">
 </head>
 <body>
-{{id}}
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-light navbar-light ">
+  <!-- Container wrapper -->
+  <div class="container-fluid">
+
+    <!-- Toggle button -->
+    <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
+            data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Collapsible wrapper -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+        <li class="nav-item">
+          <a class="nav-link" href="/ru/">Документация</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/ru/start-game">Играть</a>
+        </li>
+
+      </ul>
+
+      <!-- Icons -->
+      <ul class="navbar-nav d-flex flex-row me-1">
+        <li class="nav-item me-3 me-lg-0">
+          <a class="nav-link" href="https://t.me/BuddhaChess"><i class="fab fa-telegram-plane"></i></a>
+        </li>
+
+        <li class="nav-item me-3 me-lg-0">
+          <a class="nav-link" href="https://vk.com/club204595563"><i class="fab fa-vk"></i></a>
+        </li>
+
+        <li class="nav-item me-3 me-lg-0">
+          <a class="nav-link" href="https://www.facebook.com/groups/255866512768044"><i
+              class="fab fa-facebook-f"></i></a>
+        </li>
+
+        <li class="nav-item me-3 me-lg-0">
+          <a class="nav-link" href="https://github.com/DmitriyBessalov/buddhachess"><i
+              class="fab fa-github-alt"></i></a>
+        </li>
+
+        <li class="nav-item me-3 me-lg-0">
+          <a class="nav-link" href="https://www.youtube.com/channel/UCFGMS_-1PHhGH5FOqG7FTHw"><i
+              class="fab fa-youtube"></i></a>
+        </li>
+
+        <li class="nav-item me-3 me-lg-0">
+          <button type="button" class="btn btn-link px-3 me-2">
+            Войти
+          </button>
+        </li>
+
+        <li class="nav-item me-3 me-lg-0">
+          <button type="button" class="btn btn-primary me-3">
+            Зарегистрироваться
+          </button>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  <div class="container">
+    {% block content %}
+    <p> NULL </p>
+    {% endblock %}
+  </div>
+
+<script type="text/javascript" src="/static/mdb/js/mdb.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,14 @@
+h1 {
+    size: 35px;
+    height: 35px;
+}
+
+p {
+    text-align: justify;
+}
+
+.article_board_img{
+    width: 350px;
+    margin: 0 auto;
+    display: block;
+}

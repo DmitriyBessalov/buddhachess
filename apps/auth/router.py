@@ -6,6 +6,9 @@ from .schemas import User, UserCreate, UserUpdate, UserDB
 from fastapi_users.db import SQLAlchemyUserDatabase
 from .models import users
 import databases
+from fastapi import Request
+from fastapi.templating import Jinja2Templates
+templates = Jinja2Templates(directory="templates")
 
 router = APIRouter()
 
@@ -27,5 +30,11 @@ fastapi_users = FastAPIUsers(
 
 router.include_router(
     fastapi_users.get_auth_router(jwt_authentication),
-    prefix="/auth/jwt",
+    prefix="/jwt",
 )
+
+
+@router.get("/")
+async def get(request: Request):
+    return templates.TemplateResponse("auth/login.html", {"request": request})
+
