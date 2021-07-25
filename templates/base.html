@@ -53,25 +53,33 @@
         </li>
 
         <li class="nav-item me-3 me-lg-0">
-          <a class="nav-link" href="https://github.com/DmitriyBessalov/buddhachess"><i
-              class="fab fa-github-alt"></i></a>
+          <a class="nav-link" href="https://github.com/DmitriyBessalov/buddhachess">
+            <i class="fab fa-github-alt"></i>
+          </a>
         </li>
 
         <li class="nav-item me-3 me-lg-0">
-          <a class="nav-link" href="https://www.youtube.com/channel/UCFGMS_-1PHhGH5FOqG7FTHw"><i
-              class="fab fa-youtube"></i></a>
+          <a class="nav-link" href="https://www.youtube.com/channel/UCFGMS_-1PHhGH5FOqG7FTHw">
+            <i class="fab fa-youtube"></i>
+          </a>
         </li>
-
+      </ul>
+      <ul class="navbar-nav d-flex flex-row m-1">
         <li class="nav-item me-3 me-lg-0">
-          <button type="button" class="btn btn-link px-3 me-2">
-            Войти
-          </button>
+          <a href="/auth/login">
+            <button type="button" class="btn btn-link px-3 me-2">
+              Войти
+            </button>
+          </a>
         </li>
-
+      </ul>
+      <ul class="navbar-nav d-flex flex-row m-1">
         <li class="nav-item me-3 me-lg-0">
-          <button type="button" class="btn btn-primary me-3">
-            Зарегистрироваться
-          </button>
+          <a href="/auth/registr">
+            <button type="button" class="btn btn-primary me-3">
+              Зарегистрироваться
+            </button>
+          </a>
         </li>
 
       </ul>
@@ -79,11 +87,11 @@
   </div>
 </nav>
 
-  <div class="container">
-    {% block content %}
-    <p> NULL </p>
-    {% endblock %}
-  </div>
+<div class="container">
+  {% block content %}
+  <p> NULL </p>
+  {% endblock %}
+</div>
 
 <script type="text/javascript" src="/static/mdb/js/mdb.min.js"></script>
 </body>

@@ -1,1 +1,24 @@
-{% extends 'base.html' %}
+{% extends 'auth/login.html' %}
+
+{% block title %}
+<title>Повторное подтверждение Email</title>
+{% endblock %}
+
+{% block card %}
+<div>
+  <h1>Повторное подтверждение Email</h1>
+  <form>
+    <!-- Email input -->
+    <div class="form-outline mb-4">
+      <input type="email" id="registerEmail" class="form-control"/>
+      <label class="form-label" for="registerEmail">Логин или Email</label>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary btn-block mb-3">
+      Отправить
+    </button>
+  </form>
+</div>
+
+{% endblock %}

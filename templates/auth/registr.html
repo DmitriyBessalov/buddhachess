@@ -1,1 +1,42 @@
 {% extends 'auth/login.html' %}
+
+{% block title %}
+<title>Зарегистрироваться</title>
+{% endblock %}
+
+{% block card %}
+<div id="pills-register">
+  <h1>Регистрация</h1>
+  <form>
+    <!-- Username input -->
+    <div class="form-outline mb-4">
+      <input type="text" id="registerUsername" class="form-control"/>
+      <label class="form-label" for="registerUsername">Логин</label>
+    </div>
+
+    <!-- Email input -->
+    <div class="form-outline mb-4">
+      <input type="email" id="registerEmail" class="form-control"/>
+      <label class="form-label" for="registerEmail">Email</label>
+    </div>
+
+    <!-- Password input -->
+    <div class="form-outline mb-4">
+      <input type="password" id="registerPassword" class="form-control"/>
+      <label class="form-label" for="registerPassword">Пароль</label>
+    </div>
+
+    <!-- Repeat Password input -->
+    <div class="form-outline mb-4">
+      <input type="password" id="registerRepeatPassword" class="form-control"/>
+      <label class="form-label" for="registerRepeatPassword">Повторить пароль</label>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary btn-block mb-3">
+      Зарегистрироваться
+    </button>
+  </form>
+</div>
+
+{% endblock %}
