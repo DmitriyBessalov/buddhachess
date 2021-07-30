@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from starlette.responses import HTMLResponse
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
 
@@ -30,8 +29,3 @@ async def get(request: Request):
 @router.get("/in-yan_fib")
 async def get(request: Request):
     return templates.TemplateResponse("docs/in-yan_fib.html", {"request": request})
-
-
-# @router.get("/article/{id}", response_class=HTMLResponse)
-# async def get(request: Request, id: str):
-#     return HTMLResponse("<html>11</html>")
