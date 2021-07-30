@@ -29,9 +29,40 @@ fastapi_users = FastAPIUsers(
 )
 
 router.include_router(
-    fastapi_users.get_auth_router(jwt_authentication),
-    prefix="/jwt",
+    fastapi_users.get_register_router(),
+    prefix="/api",
 )
+
+router.include_router(
+    fastapi_users.get_auth_router(jwt_authentication),
+    prefix="/api",
+)
+
+router.include_router(
+    fastapi_users.get_reset_password_router(settings.jwt_secret),
+    prefix="/api",
+)
+
+router.include_router(
+    fastapi_users.get_users_router(),
+    prefix="/api/users",
+)
+
+
+router.include_router(
+    fastapi_users.get_verify_router(settings.jwt_secret),
+    prefix="/api",
+)
+
+
+@router.on_event("startup")
+async def startup():
+    await database.connect()
+
+
+@router.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
 
 
 @router.get("/login")

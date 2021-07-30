@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     # jwt_algorithm: str = 'HS256'
     # jwt_expires_s: int = 3600
 
+    debug: bool
+
 
 settings = Settings(
     _env_file='.env',

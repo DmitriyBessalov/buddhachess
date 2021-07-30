@@ -4,7 +4,6 @@ from apps.article.router import router as article_router
 from apps.auth.router import router as auth_router
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
-
 from settings import settings
 
 app = FastAPI()
