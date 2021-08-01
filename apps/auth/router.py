@@ -72,7 +72,7 @@ async def get(request: Request):
 
 @router.get("/registr")
 async def get(request: Request):
-    return templates.TemplateResponse("auth/registr.html", {"request": request})
+    return templates.TemplateResponse("auth/register.html", {"request": request})
 
 
 @router.get("/reset_activation")
