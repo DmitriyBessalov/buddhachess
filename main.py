@@ -20,7 +20,7 @@ async def redirect_home():
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-@app.get("/git_update")
+@app.post("/git_update")
 async def redirect_home():
     result = subprocess.run('git reset --hard origin/master && git pull https://github.com/DmitriyBessalov/buddhachess.git', shell=True, stdout=subprocess.PIPE)
     return HTMLResponse(result.stdout)
