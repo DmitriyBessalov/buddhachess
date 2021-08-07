@@ -1,4 +1,7 @@
-from pydantic import BaseSettings
+import secrets
+from typing import Any, Dict, List, Optional, Union
+
+from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, validator
 
 
 class Settings(BaseSettings):
@@ -12,6 +15,10 @@ class Settings(BaseSettings):
     # jwt_expires_s: int = 3600
 
     debug: bool
+
+    SECRET_KEY = "{{cookiecutter.secret_key}}"
+    ALGORITHM = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 settings = Settings(

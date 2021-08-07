@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 import uvicorn
-from apps.article.router import router as article_router
-from apps.auth.router import router as auth_router
+from app.article.router import router as article_router
+from app.auth.router import router as auth_router
+from app.auth.api import router as auth_api_router
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, HTMLResponse
 from settings import settings
@@ -9,6 +10,7 @@ import subprocess
 
 app = FastAPI()
 
+app.include_router(auth_api_router, prefix="/api", tags=["auth_api"],)
 app.include_router(auth_router, prefix="/auth", tags=["auth"],)
 app.include_router(article_router, prefix="/ru", tags=['article'])
 
