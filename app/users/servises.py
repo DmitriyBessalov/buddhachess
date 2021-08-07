@@ -1,14 +1,14 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-
 from sqlalchemy.orm import Session
 from typing import List
 from passlib.context import CryptContext
 from . import models, schemas
 from jwt import PyJWTError
 import jwt
-from settings import settings as security
+from settings import settings
 from db import get_db
+from datetime import datetime, timedelta
 
 
 def get_password_hash(password: str) -> str:
@@ -28,7 +28,7 @@ def get_user_by_email(db: Session, email: str) -> schemas.UserBase:
 
 
 def get_users(
-    db: Session, skip: int = 0, limit: int = 100
+        db: Session, skip: int = 0, limit: int = 100
 ) -> List[schemas.UserOut]:
     return db.query(models.User).offset(skip).limit(limit).all()
 
@@ -56,7 +56,7 @@ def delete_user(db: Session, user_id: int):
 
 
 def edit_user(
-    db: Session, user_id: int, user: schemas.UserEdit
+        db: Session, user_id: int, user: schemas.UserEdit
 ) -> schemas.User:
     db_user = get_user(db, user_id)
     if not db_user:
@@ -80,7 +80,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/token")
 
 
 async def get_current_user(
-    db=Depends(get_db), token: str = Depends(oauth2_scheme)
+        db=Depends(get_db), token: str = Depends(oauth2_scheme)
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -89,7 +89,7 @@ async def get_current_user(
     )
     try:
         payload = jwt.decode(
-            token, security.SECRET_KEY, algorithms=[security.ALGORITHM]
+            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         email: str = payload.get("sub")
         if email is None:
@@ -105,7 +105,7 @@ async def get_current_user(
 
 
 async def get_current_active_user(
-    current_user: models.User = Depends(get_current_user),
+        current_user: models.User = Depends(get_current_user),
 ):
     if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
@@ -113,7 +113,7 @@ async def get_current_active_user(
 
 
 async def get_current_active_superuser(
-    current_user: models.User = Depends(get_current_user),
+        current_user: models.User = Depends(get_current_user),
 ) -> models.User:
     if not current_user.is_superuser:
         raise HTTPException(
@@ -126,7 +126,7 @@ def authenticate_user(db, email: str, password: str):
     user = get_user_by_email(db, email)
     if not user:
         return False
-    if not security.verify_password(password, user.hashed_password):
+    if not verify_password(password, user.hashed_password):
         return False
     return user
 
@@ -145,3 +145,25 @@ def sign_up_new_user(db, email: str, password: str):
         ),
     )
     return new_user
+
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+# def get_password_hash(password: str) -> str:
+#    return pwd_context.hash(password)
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+def create_access_token(*, data: dict, expires_delta: timedelta = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+    return encoded_jwt

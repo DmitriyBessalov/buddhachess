@@ -1,11 +1,9 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 import typing
 
 
 class UserBase(BaseModel):
-    email: str
-    is_active: bool = True
-    is_superuser: bool = False
+    email: EmailStr
     username: str = None
 
 
@@ -15,9 +13,6 @@ class UserOut(UserBase):
 
 class UserCreate(UserBase):
     password: str
-    email: str
-    is_active: bool = True
-    username: str = None
 
     class Config:
         orm_mode = True
@@ -43,5 +38,5 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    email: str = None
+    email: EmailStr = None
     permissions: str = "user"

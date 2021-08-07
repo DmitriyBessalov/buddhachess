@@ -1,6 +1,3 @@
-import secrets
-from typing import Any, Dict, List, Optional, Union
-
 from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, validator
 
 
@@ -10,15 +7,11 @@ class Settings(BaseSettings):
 
     database_url: str
 
-    jwt_secret: str
-    # jwt_algorithm: str = 'HS256'
-    # jwt_expires_s: int = 3600
+    JWT_SECRET: str = "secret_key"
+    JWT_ALGORITHM: str = "HS256"
+    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     debug: bool
-
-    SECRET_KEY = "{{cookiecutter.secret_key}}"
-    ALGORITHM = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 settings = Settings(

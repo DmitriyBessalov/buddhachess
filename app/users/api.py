@@ -17,12 +17,12 @@ from .schemas import UserCreate, UserEdit, User, UserOut
 router = APIRouter()
 
 
+# Создать нового пользователя
 @router.post("/users", response_model=User, response_model_exclude_none=True)
 async def user_create(
         request: Request,
         user: UserCreate,
         db=Depends(get_db),
-        current_user=Depends(get_current_active_superuser),
 ):
     """
     Create a new user
