@@ -1,17 +1,20 @@
-from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, validator
+# from pydantic import AnyHttpUrl, EmailStr, HttpUrl, PostgresDsn, validator
+from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    server_host: str = '127.0.0.1'
-    server_port: int = 8000
-
-    database_url: str
+    SERVER_HOST: str = '127.0.0.1'
+    SERVER_PORT: int = 8000
+    DATABASE_URL: str
 
     JWT_SECRET: str = "secret_key"
     JWT_ALGORITHM: str = "HS256"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
-    debug: bool
+    EMAILS_FROM_NAME: str = "Ivanov Ivan"
+    EMAILS_FROM_EMAIL: str = "email@example.com"
+
+    DEBUG: bool
 
 
 settings = Settings(

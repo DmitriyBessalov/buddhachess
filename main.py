@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import uvicorn
 from app.article.router import router as article_router
 from app.auth.router import router as auth_router
-from app.users.api import router as users_api_router
+from app.auth.api import router as auth_api_router
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, HTMLResponse
 from settings import settings
@@ -10,7 +10,7 @@ import subprocess
 
 app = FastAPI()
 
-app.include_router(users_api_router, prefix="/api/users", tags=["users_api"],)
+app.include_router(auth_api_router, prefix="/api/users", tags=["users_api"],)
 app.include_router(auth_router, prefix="/auth", tags=["auth"],)
 app.include_router(article_router, prefix="/ru", tags=['article'])
 
@@ -35,7 +35,7 @@ async def redirect_home():
 if __name__ == "__main__":
     uvicorn.run(
         'main:app',
-        host=settings.server_host,
-        port=settings.server_port,
+        host=settings.SERVER_HOST,
+        port=settings.SERVER_PORT,
         reload=True,
     )
