@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+
+{{ project_name }} - Password Recovery <br>
+ <br>
+We received a request to recover the password for user {{ username }} with email {{ email }} <br>
+ <br>
+Reset your password by clicking the button below: <br>
+ <br>
+<a href="{{ link }}">Reset Password</a> <br>
+ <br>
+Or open the following link: <br>
+<a href="{{ link }}">{{ link }}</a> <br>
+ <br>
+The reset password link / button will expire in {{ valid_hours }} hours. <br>
+If you didn't request a password recovery you can disregard this email.
+
+</body>
+</html>

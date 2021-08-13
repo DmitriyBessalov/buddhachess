@@ -6,6 +6,7 @@ from settings import settings
 from db import get_db
 from .servises import create_user, create_token, get_user_by_username, get_user_by_email
 from . import schemas
+from pathlib import Path
 
 router = APIRouter()
 
@@ -31,12 +32,17 @@ async def user_create(
 
 @router.get("/test_email")
 async def test_email():
+    with open(Path("../../templates/auth/email_templates") / "reset_password.html") as f:
+        template_str = f.read()
+
     message = emails.html(subject=JinjaTemplate('Payment Receipt No.{{ billno }}'),
                           html=JinjaTemplate('<p>Dear {{ name }}! This is a receipt...'),
-                          mail_from=(settings.EMAILS_FROM_NAME, settings.EMAILS_FROM_EMAIL))
+                          mail_from=(settings.EMAIL_FROM_NAME, settings.EMAIL_FROM_EMAIL))
 
-    response = message.send(to=('John Brown', 'jbrown@gmail.com'),
-                            render={'name': 'John Brown', 'billno': '141051906163'})
+
+    response = message.send(to=('John Brown', 'noyato9573@cfcjy.com'),
+                            render={'name': 'John Brown', 'billno': '141051906163'},
+                            smtp={"host": settings.EMAIL_HOST, "port": settings.EMAIL_PORT})
 
     return HTMLResponse(str(response))
 

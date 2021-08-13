@@ -7,12 +7,14 @@ class Settings(BaseSettings):
     SERVER_PORT: int = 8000
     DATABASE_URL: str
 
-    JWT_SECRET: str = "secret_key"
-    JWT_ALGORITHM: str = "HS256"
+    JWT_SECRET: str = 'SECRET'
+    JWT_ALGORITHM: str = 'HS256'
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
-    EMAILS_FROM_NAME: str = "Ivanov Ivan"
-    EMAILS_FROM_EMAIL: str = "email@example.com"
+    EMAIL_HOST: str = 'localhost'
+    EMAIL_PORT: int = 25
+    EMAIL_FROM_NAME: str = ''
+    EMAIL_FROM_EMAIL: str = 'mail@example.com'
 
     DEBUG: bool
 
