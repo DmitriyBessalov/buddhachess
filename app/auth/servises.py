@@ -1,8 +1,6 @@
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-from jwt import PyJWTError
 from sqlalchemy.orm import Session
-from starlette import status
 from db import get_db
 from app.auth import schemas, models
 import jwt
@@ -21,9 +19,8 @@ async def create_user(db: Session, user: schemas.UserWithEmail, hashed_password)
     return db_user
 
 
-async def create_token(user: schemas.UserWithEmail):
-    user_obj = schemas.UserWithEmail.from_orm(user)
-    token = jwt.encode(user_obj.dict(), settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+async def create_token(username: str, hashed_password: str):
+    token = jwt.encode({'username': username, 'hashed_password': hashed_password}, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
     return dict(token_type="bearer", access_token=token)
 
 
@@ -44,12 +41,20 @@ async def get_current_user(
     try:
         payload = jwt.decode(token, settings.JWT_SECRET, algorithms=["HS256"])
         user = db.query(models.User).get(payload["username"])
+
+        if user.hashed_password != payload["hashed_password"]:
+            raise HTTPException(
+                status_code=401, detail="Please refresh token"
+            )
     except:
         raise HTTPException(
             status_code=401, detail="Invalid Token"
         )
 
     return schemas.UserHashPassword.from_orm(user)
+
+
+
 
 # def edit_user(
 #         db: Session, user_id: int, user: schemas.UserEdit
