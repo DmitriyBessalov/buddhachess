@@ -1,42 +1,31 @@
 from pydantic import BaseModel, EmailStr
-import typing
 
 
-class UserBase(BaseModel):
-    email: EmailStr
-    username: str = None
-
-
-class UserOut(UserBase):
-    pass
-
-
-class UserCreate(UserBase):
+class User(BaseModel):
+    username: str
     password: str
 
     class Config:
         orm_mode = True
 
 
-class UserEdit(UserBase):
-    password: typing.Optional[str] = None
+class UserWithEmail(User):
+    email: EmailStr
+
+
+class UserHashPassword(BaseModel):
+    username: str
+    hashed_password: str
+    email: EmailStr
 
     class Config:
         orm_mode = True
 
 
-class User(UserBase):
-    id: int
-
-    class Config:
-        orm_mode = True
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+class ResetActivation(BaseModel):
+    username: str
 
 
 class TokenData(BaseModel):
-    email: EmailStr = None
+    username: str
     permissions: str = "user"

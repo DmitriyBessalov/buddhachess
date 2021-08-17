@@ -5,8 +5,7 @@ from db import Base
 class User(Base):
     __tablename__ = "user"
 
-    id = Column(Integer, primary_key=True, unique=True)
-    username = Column(String, unique=True)
+    username = Column(String, primary_key=True, unique=True)
     email = Column(String, unique=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)

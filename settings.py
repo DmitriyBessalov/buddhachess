@@ -9,7 +9,7 @@ class Settings(BaseSettings):
 
     JWT_SECRET: str = 'SECRET'
     JWT_ALGORITHM: str = 'HS256'
-    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+#    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     EMAIL_HOST: str = 'localhost'
     EMAIL_PORT: int = 25

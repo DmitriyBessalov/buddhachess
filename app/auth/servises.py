@@ -1,25 +1,15 @@
+from fastapi import Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+from jwt import PyJWTError
 from sqlalchemy.orm import Session
-from passlib.context import CryptContext
-from app.auth import models, schemas
+from starlette import status
+from db import get_db
+from app.auth import schemas, models
 import jwt
 from settings import settings
 
 
-def get_password_hash(password: str) -> str:
-    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    return pwd_context.hash(password)
-
-
-async def get_user_by_username(username: str, db: Session):
-    return db.query(models.User).filter(models.User.username == username).first()
-
-
-async def get_user_by_email(email: str, db: Session):
-    return db.query(models.User).filter(models.User.email == email).first()
-
-
-async def create_user(db: Session, user: schemas.UserCreate):
-    hashed_password = get_password_hash(user.password)
+async def create_user(db: Session, user: schemas.UserWithEmail, hashed_password):
     db_user = models.User(
         username=user.username,
         email=user.email,
@@ -31,65 +21,37 @@ async def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
-async def create_token(user: models.User):
-    user_obj = schemas.User.from_orm(user)
-    token = jwt.encode(user_obj.dict(), settings.JWT_SECRET)
-    return dict(access_token=token, token_type="bearer")
+async def create_token(user: schemas.UserWithEmail):
+    user_obj = schemas.UserWithEmail.from_orm(user)
+    token = jwt.encode(user_obj.dict(), settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+    return dict(token_type="bearer", access_token=token)
 
 
-# def get_user(db: Session, user_id: int):
-#     user = db.query(models.User).filter(models.User.id == user_id).first()
-#     if not user:
-#         raise HTTPException(status_code=404, detail="User not found")
-#     return user
+async def get_user_from_username_or_email(username: str, db: Session):
+    if username.find("@") != -1:
+        db_user = db.query(models.User).filter(models.User.email == username).first()
+    else:
+        db_user = db.query(models.User).filter(models.User.username == username).first()
+    return db_user
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/users/token")
 
 
-# def get_user_by_email(db: Session, email: str) -> schemas.UserBase:
-#     return db.query(models.User).filter(models.User.email == email).first()
+async def get_current_user(
+    db=Depends(get_db),
+    token: str = Depends(oauth2_scheme),
+):
+    try:
+        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=["HS256"])
+        user = db.query(models.User).get(payload["username"])
+    except:
+        raise HTTPException(
+            status_code=401, detail="Invalid Token"
+        )
 
+    return schemas.User2.from_orm(user)
 
-# def get_users(
-#         db: Session, skip: int = 0, limit: int = 100
-# ) -> List[schemas.UserOut]:
-#     return db.query(models.User).offset(skip).limit(limit).all()
-
-
-# def delete_user(db: Session, user_id: int):
-#     user = get_user(db, user_id)
-#     if not user:
-#         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="User not found")
-#     db.delete(user)
-#     db.commit()
-#     return user
-
-
-# def edit_user(
-#         db: Session, user_id: int, user: schemas.UserEdit
-# ) -> schemas.User:
-#     db_user = get_user(db, user_id)
-#     if not db_user:
-#         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="User not found")
-#     update_data = user.dict(exclude_unset=True)
-#
-#     if "password" in update_data:
-#         update_data["hashed_password"] = get_password_hash(user.password)
-#         del update_data["password"]
-#
-#     for key, value in update_data.items():
-#         setattr(db_user, key, value)
-#
-#     db.add(db_user)
-#     db.commit()
-#     db.refresh(db_user)
-#     return db_user
-#
-#
-# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/token")
-
-
-# async def get_current_user(
-#         db=Depends(get_db), token: str = Depends(oauth2_scheme)
-# ):
+# async def get_current_user(token: str = Depends(oauth2_scheme), db=Depends(get_db)):
 #     credentials_exception = HTTPException(
 #         status_code=status.HTTP_401_UNAUTHORIZED,
 #         detail="Could not validate credentials",
@@ -97,16 +59,16 @@ async def create_token(user: models.User):
 #     )
 #     try:
 #         payload = jwt.decode(
-#             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+#             token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM]
 #         )
-#         email: str = payload.get("sub")
-#         if email is None:
+#         username: str = payload.get("sub")
+#         if username is None:
 #             raise credentials_exception
 #         permissions: str = payload.get("permissions")
-#         token_data = schemas.TokenData(email=email, permissions=permissions)
+#         token_data = schemas.TokenData(username=username, permissions=permissions)
 #     except PyJWTError:
 #         raise credentials_exception
-#     user = get_user_by_email(db, token_data.email)
+#     user = get_user_from_username_or_email(token_data.username, db)
 #     if user is None:
 #         raise credentials_exception
 #     return user
@@ -158,13 +120,6 @@ async def create_token(user: models.User):
 # pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-# def get_password_hash(password: str) -> str:
-#    return pwd_context.hash(password)
-
-
-# def verify_password(plain_password: str, hashed_password: str) -> bool:
-#     return pwd_context.verify(plain_password, hashed_password)
-#
 #
 # def create_access_token(*, data: dict, expires_delta: timedelta = None):
 #     to_encode = data.copy()
@@ -175,3 +130,51 @@ async def create_token(user: models.User):
 #     to_encode.update({"exp": expire})
 #     encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
 #     return encoded_jwt
+
+
+
+# def get_user(db: Session, user_id: int):
+#     user = db.query(models.User).filter(models.User.id == user_id).first()
+#     if not user:
+#         raise HTTPException(status_code=404, detail="User not found")
+#     return user
+
+
+# def get_user_by_email(db: Session, email: str) -> schemas.UserBase:
+#     return db.query(models.User).filter(models.User.email == email).first()
+
+
+# def get_users(
+#         db: Session, skip: int = 0, limit: int = 100
+# ) -> List[schemas.UserOut]:
+#     return db.query(models.User).offset(skip).limit(limit).all()
+
+
+# def delete_user(db: Session, user_id: int):
+#     user = get_user(db, user_id)
+#     if not user:
+#         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="User not found")
+#     db.delete(user)
+#     db.commit()
+#     return user
+
+
+# def edit_user(
+#         db: Session, user_id: int, user: schemas.UserEdit
+# ) -> schemas.User:
+#     db_user = get_user(db, user_id)
+#     if not db_user:
+#         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="User not found")
+#     update_data = user.dict(exclude_unset=True)
+#
+#     if "password" in update_data:
+#         update_data["hashed_password"] = get_password_hash(user.password)
+#         del update_data["password"]
+#
+#     for key, value in update_data.items():
+#         setattr(db_user, key, value)
+#
+#     db.add(db_user)
+#     db.commit()
+#     db.refresh(db_user)
+#     return db_user

@@ -2,7 +2,9 @@ from fastapi import FastAPI
 import uvicorn
 from app.article.router import router as article_router
 from app.auth.router import router as auth_router
+
 from app.auth.api import router as auth_api_router
+
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, HTMLResponse
 from settings import settings

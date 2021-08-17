@@ -23,9 +23,9 @@ async def get(request: Request):
     return templates.TemplateResponse("auth/reset_activation.html", {"request": request})
 
 
-@router.get("/reset_password")
-async def get(request: Request):
-    return templates.TemplateResponse("auth/reset_password.html", {"request": request})
+@router.get("/reset_password/")
+async def get(token: str):
+    return templates.TemplateResponse("auth/reset_password.html", {"token": token})
 
 
 @router.get("/reset_password_confirm")
