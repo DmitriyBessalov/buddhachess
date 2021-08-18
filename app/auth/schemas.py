@@ -22,7 +22,7 @@ class UserHashPassword(BaseModel):
         orm_mode = True
 
 
-class ResetActivation(BaseModel):
+class ResetPassword(BaseModel):
     username: str
 
 

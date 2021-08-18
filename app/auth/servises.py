@@ -19,8 +19,20 @@ async def create_user(db: Session, user: schemas.UserWithEmail, hashed_password)
     return db_user
 
 
+async def update_password(db: Session, username: str, hashed_password: str):
+    q = db.query(models.User).filter_by(username=username).one()
+    q.hashed_password = hashed_password
+    db.add(q)
+    db.commit()
+    db.refresh(q)
+    return q
+
+
 async def create_token(username: str, hashed_password: str):
-    token = jwt.encode({'username': username, 'hashed_password': hashed_password}, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+    token = jwt.encode({'username': username, 'hashed_password': hashed_password},
+                       settings.JWT_SECRET,
+                       algorithm=settings.JWT_ALGORITHM)
+
     return dict(token_type="bearer", access_token=token)
 
 

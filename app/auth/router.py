@@ -13,14 +13,19 @@ async def get(request: Request):
     return templates.TemplateResponse("auth/login.html", {"request": request})
 
 
-@router.get("/registr")
+@router.get("/register")
 async def get(request: Request):
     return templates.TemplateResponse("auth/register.html", {"request": request})
 
 
 @router.get("/reset_activation")
 async def get(request: Request):
-    return templates.TemplateResponse("auth/reset_activation.html", {"request": request})
+    return templates.TemplateResponse("auth/reset_password.html", {"request": request})
+
+
+@router.get("/account_verify/")
+async def get(token: str):
+    return templates.TemplateResponse("auth/account_verify.html", {"token": token})
 
 
 @router.get("/reset_password/")
@@ -28,6 +33,6 @@ async def get(token: str):
     return templates.TemplateResponse("auth/reset_password.html", {"token": token})
 
 
-@router.get("/reset_password_confirm")
+@router.get("/password_confirm")
 async def get(request: Request):
-    return templates.TemplateResponse("auth/reset_password_confirm.html", {"request": request})
+    return templates.TemplateResponse("auth/password_confirm.html", {"request": request})
