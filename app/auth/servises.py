@@ -1,10 +1,13 @@
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Request
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from db import get_db
 from app.auth import schemas, models
-import jwt
+from pathlib import Path
 from settings import settings
+from db import get_db
+from emails.template import JinjaTemplate
+import emails
+import jwt
 
 
 async def create_user(db: Session, user: schemas.UserWithEmail, hashed_password):
@@ -20,12 +23,12 @@ async def create_user(db: Session, user: schemas.UserWithEmail, hashed_password)
 
 
 async def update_password(db: Session, username: str, hashed_password: str):
-    q = db.query(models.User).filter_by(username=username).one()
-    q.hashed_password = hashed_password
-    db.add(q)
+    user = db.query(models.User).filter_by(username=username).one()
+    user.hashed_password = hashed_password
+    db.add(user)
     db.commit()
-    db.refresh(q)
-    return q
+    db.refresh(user)
+    return user
 
 
 async def create_token(username: str, hashed_password: str):
@@ -66,24 +69,33 @@ async def get_current_user(
     return schemas.UserHashPassword.from_orm(user)
 
 
+async def send_email(templates: str, title: str, request: Request, db_user: schemas.UserHashPassword):
+
+    with open(str(Path.cwd()) + "/templates/auth/email_templates/" + templates + ".html") as f:
+        template_str = f.read()
+
+    message = emails.html(subject=JinjaTemplate(title),
+                          html=JinjaTemplate(template_str),
+                          mail_from=(settings.EMAIL_FROM_NAME, settings.EMAIL_FROM_EMAIL))
+
+    token = await create_token(db_user.username, db_user.hashed_password)
+
+    response = message.send(to=(db_user.username, db_user.email),
+                            render={'token': token['access_token'],
+                                    'username': db_user.username,
+                                    'base_url': str(request.base_url),
+                                    'hostname': request.url.hostname
+                                    },
+                            smtp={"host": settings.EMAIL_HOST, "port": settings.EMAIL_PORT})
+
+    return str(response)
 
 
-# def edit_user(
-#         db: Session, user_id: int, user: schemas.UserEdit
-# ) -> schemas.User:
-#     db_user = get_user(db, user_id)
-#     if not db_user:
-#         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="User not found")
-#     update_data = user.dict(exclude_unset=True)
-#
-#     if "password" in update_data:
-#         update_data["hashed_password"] = get_password_hash(user.password)
-#         del update_data["password"]
-#
-#     for key, value in update_data.items():
-#         setattr(db_user, key, value)
-#
-#     db.add(db_user)
-#     db.commit()
-#     db.refresh(db_user)
-#     return db_user
+async def verify__email(username, db):
+    user = db.query(models.User).filter_by(username=username).one()
+    user.is_verified = True
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
