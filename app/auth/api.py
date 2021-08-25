@@ -20,21 +20,21 @@ router = APIRouter()
 
 
 @router.post("/register")
-async def user_create(user: schemas.UserWithEmail, request: Request, db=Depends(get_db)):
+async def user_create(user: schemas.UserRegister, request: Request, db=Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.username == user.username).first()
     if user.username.find("@") != -1:
-        raise HTTPException(status_code=404, detail="Username cannot contain '@'")
+        raise HTTPException(status_code=404, detail=schemas.HTTPError("username", "Username cannot contain '@'"))
     if db_user:
-        raise HTTPException(status_code=404, detail="Username already in use")
+        raise HTTPException(status_code=404, detail=schemas.HTTPError("username", "Username already in use"))
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if db_user:
-        raise HTTPException(status_code=404, detail="Email already in use")
+        raise HTTPException(status_code=404, detail=schemas.HTTPError("email", "Email already in use"))
 
     hashed_password = CryptContext(schemes='bcrypt', deprecated="auto").hash(user.password)
 
     await create_user(db, user, hashed_password)
 
-    await send_email("new_account", 'Подтвердите регистрацию на сайте "Шахматы Будды"', request, db_user)
+    await send_email("new_account", 'Подтвердите регистрацию на сайте "Шахматы Будды"', request, user)
 
     return await create_token(user.username, hashed_password)
 

@@ -1,3 +1,4 @@
+/* article */
 h1 {
     size: 35px;
     height: 35px;
@@ -12,3 +13,18 @@ p {
     margin: 0 auto;
     display: block;
 }
+
+/* form validate */
+.is-valid~.valid-feedback, .is-invalid~.valid-feedback {
+    display: block;
+}
+
+.valid-feedback, .invalid-feedback {
+    display: none;
+    margin-top: -.95rem;
+}
+
+/*!* alert *!*/
+/*#alertMDB{*/
+/*    display: none;*/
+/*}*/

@@ -4,6 +4,10 @@
 <title>Войти</title>
 {% endblock %}
 
+{% block head %}
+<script async="" src="/static/js/auth.js"></script>
+{% endblock %}
+
 {% block content %}
 <!-- Container for demo purpose -->
 <div class="container my-5 py-5">
@@ -18,7 +22,7 @@
             <!-- Pills content -->
               <div id="pills-login">
                 <form>
-                  <h1>Вход</h1>
+                  <h1 class="mb-4">Вход</h1>
                   <!-- Email input -->
                   <div class="form-outline mb-4">
                     <input type="email" id="loginName" class="form-control"/>

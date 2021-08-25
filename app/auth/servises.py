@@ -10,7 +10,7 @@ import emails
 import jwt
 
 
-async def create_user(db: Session, user: schemas.UserWithEmail, hashed_password):
+async def create_user(db: Session, user: schemas.UserRegister, hashed_password):
     db_user = models.User(
         username=user.username,
         email=user.email,
@@ -46,7 +46,7 @@ async def get_user_from_username_or_email(username: str, db: Session):
         db_user = db.query(models.User).filter(models.User.username == username).first()
     return db_user
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/users/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 
 async def get_current_user(

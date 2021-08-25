@@ -12,7 +12,7 @@ import subprocess
 
 app = FastAPI()
 
-app.include_router(auth_api_router, prefix="/api/users", tags=["users_api"],)
+app.include_router(auth_api_router, prefix="/api/auth", tags=["auth_api"],)
 app.include_router(auth_router, prefix="/auth", tags=["auth"],)
 app.include_router(article_router, prefix="/ru", tags=['article'])
 
