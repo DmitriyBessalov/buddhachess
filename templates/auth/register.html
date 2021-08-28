@@ -8,10 +8,10 @@
 <div id="pills-register">
   <h1 class="mb-4">Регистрация</h1>
 
-  <Form id="form_register" class="needs-validation">
+  <form method="POST" action="/api/auth/register/" class="needs-validation auth">
     <!-- Username input -->
     <div class="form-outline mb-4">
-      <input type="text" id="username" name="username" class="form-control" required/>
+      <input type="text" id="username" name="username" class="form-control" minlength="4" required/>
       <label class="form-label" for="username">Логин</label>
       <div class="invalid-feedback"></div>
     </div>
@@ -23,13 +23,13 @@
     </div>
     <!-- Password input -->
     <div class="form-outline mb-4">
-      <input type="password" id="password" name="password" class="form-control" required/>
+      <input type="password" id="password" name="password" class="form-control" minlength="8" required/>
       <label class="form-label" for="password">Пароль</label>
       <div class="invalid-feedback"></div>
     </div>
     <!-- Repeat Password input -->
     <div class="form-outline mb-4">
-      <input type="password" id="password2" name="password2" class="form-control" required/>
+      <input type="password" id="password2" name="password2" class="form-control" minlength="8" required/>
       <label class="form-label" for="password2">Повторить пароль</label>
       <div class="invalid-feedback"></div>
     </div>
@@ -37,7 +37,7 @@
     <button type="submit" class="btn btn-primary btn-block mb-3">
       Зарегистрироваться
     </button>
-  </Form>
+  </form>
 </div>
 
 {% endblock %}

@@ -34,7 +34,9 @@ async def user_create(user: schemas.UserRegister, request: Request, db=Depends(g
 
     await create_user(db, user, hashed_password)
 
-    await send_email("new_account", 'Подтвердите регистрацию на сайте "Шахматы Будды"', request, user)
+    _user = schemas.UserHashPassword(username=user.username, hashed_password=hashed_password, email=user.email)
+
+    await send_email("new_account", 'Подтвердите регистрацию на сайте "Шахматы Будды"', request, _user)
 
     return await create_token(user.username, hashed_password)
 
@@ -64,7 +66,7 @@ async def password_update(password: str, user: schemas.User = Depends(get_curren
     return await create_token(user.username, hashed_password)
 
 
-@router.patch("/verify_email")
+@router.patch("/verify_activation")
 async def verify_email(user: schemas.User = Depends(get_current_user), db=Depends(get_db)):
     return await verify__email(user.username, db)
 

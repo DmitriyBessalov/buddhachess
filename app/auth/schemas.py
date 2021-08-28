@@ -39,4 +39,4 @@ class TokenData(BaseModel):
 
 
 def HTTPError(loc: str, msg: str):
-    return {"detail": [{"loc": ["body", loc], "msg": msg}]}
+    return [{"loc": ["body", loc], "msg": msg}]

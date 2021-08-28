@@ -1,13 +1,13 @@
 {% extends 'auth/login.html' %}
 
 {% block title %}
-<title>Повторное подтверждение Email</title>
+<title>Повторный запрос на подтверждение Email</title>
 {% endblock %}
 
 {% block card %}
 <div>
-  <h1 class="mb-4">Повторное подтверждение Email</h1>
-  <form>
+  <h1 class="mb-4">Повторный запрос на подтверждение Email</h1>
+  <form method="PATCH" action="/api/auth/verify_activation/" class="needs-validation auth">
     <!-- Email input -->
     <div class="form-outline mb-4">
       <input type="email" id="registerEmail" class="form-control"/>
