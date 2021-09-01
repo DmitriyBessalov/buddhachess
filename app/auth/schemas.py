@@ -6,15 +6,20 @@ class User(BaseModel):
     password: str
 
 
-class UserRegister(User):
-    email: EmailStr
+class DoublePassword(BaseModel):
+    password: str
     password2: str
 
     @validator('password2')
-    def passwords_match(cls, v, values, **kwargs):
+    def passwords_match(cls, v, values):
         if v != values['password']:
             raise ValueError('Passwords do not match')
         return v
+
+
+class UserRegister(DoublePassword):
+    username: str
+    email: EmailStr
 
     class Config:
         orm_mode = True
@@ -22,8 +27,8 @@ class UserRegister(User):
 
 class UserHashPassword(BaseModel):
     username: str
-    hashed_password: str
     email: EmailStr
+    hashed_password: str
 
     class Config:
         orm_mode = True
@@ -31,12 +36,3 @@ class UserHashPassword(BaseModel):
 
 class ResetPassword(BaseModel):
     username: str
-
-
-class TokenData(BaseModel):
-    username: str
-    permissions: str = "user"
-
-
-def HTTPError(loc: str, msg: str):
-    return [{"loc": ["body", loc], "msg": msg}]

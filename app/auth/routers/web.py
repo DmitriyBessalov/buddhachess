@@ -23,16 +23,17 @@ async def get(request: Request):
     return templates.TemplateResponse("auth/reset_password.html", {"request": request})
 
 
-@router.get("/account_verify/")
-async def get(token: str):
-    return templates.TemplateResponse("auth/account_verify.html", {"token": token})
+@router.get("/verify_activation/{token}")
+async def get(token: str, request: Request):
+
+    return templates.TemplateResponse('auth/verify_activation.html', context={'token': token, 'request': request})
 
 
-@router.get("/reset_password/")
-async def get(token: str):
-    return templates.TemplateResponse("auth/reset_password.html", {"token": token})
-
-
-@router.get("/password_confirm")
+@router.get("/reset_password")
 async def get(request: Request):
-    return templates.TemplateResponse("auth/password_confirm.html", {"request": request})
+    return templates.TemplateResponse("auth/reset_password.html", {"request": request})
+
+
+@router.get("/password_confirm/{token}")
+async def get(token: str, request: Request):
+    return templates.TemplateResponse("auth/password_confirm.html", context={'token': token, 'request': request})

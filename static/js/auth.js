@@ -13,66 +13,70 @@ const AlertMDB = (text, color) => {
   </div>'
 }
 
-const form = document.querySelector('.needs-validation.auth')
-form.addEventListener('submit', function (event) {
-  event.preventDefault()
-  const data = new FormData(event.target)
-  const value = Object.fromEntries(data.entries())
+authForm.onsubmit = async (e) => {
+  e.preventDefault()
+  const
+    data = new FormData(e.target),
+    value = Object.fromEntries(data.entries()),
+    action = authForm.action.replace(window.location.origin + '/api/auth/', '')
 
-  fetch(event.path[0].action, {
-    method: event.path[0].method,
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(value)
-  }).then(
-    async response => ({
-      status: response.status,
-      body: await response.text(),
+  let
+    response,
+    form_valid = true
+
+  if (action === 'token')
+    response = await fetch(e.path[0].action, {
+      method: e.path[0].method,
+      body: new FormData(authForm)
     })
-  ).then(
-    response => {
-      console.log(response.body)
-      response = JSON.parse(response.body)
-      let form_valid = true
+  else
+    response = await fetch(e.path[0].action, {
+      method: e.path[0].method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+      },
+      body: JSON.stringify(value)
+    })
 
-        for (const prop in value) {
-          let input = document.querySelector('[name=' + prop + ']')
-          if ((typeof (response.detail) != "undefined") && (response.detail[0].loc[1] === prop))  {
-            // input.classList.remove('is-valid')
-            input.classList.add('is-invalid')
-            let msg = document.querySelector('[name=' + prop + ']~.invalid-feedback')
-            msg.innerHTML = response.detail[0].msg
-            form_valid = false
-          } else {
-            // input.classList.add('is-valid')
-            input.classList.remove('is-invalid')
-          }
-      }
-      if (form_valid) {
-        form.querySelector('button[type=submit]').disabled = true
-        form_action(response, form.action)
-      }
+  console.log(await response)
+  const result = await response.json()
+
+  for (const prop in value) {
+    let input = document.querySelector('[name=' + prop + ']')
+    if (result?.detail?.[0]?.loc?.[1] === prop) {
+      // input.classList.remove('is-valid')
+      input.classList.add('is-invalid')
+      let msg = document.querySelector('[name=' + prop + ']~.invalid-feedback')
+      msg.innerHTML = result.detail[0].msg
+      form_valid = false
+    } else {
+      // input.classList.add('is-valid')
+      input.classList.remove('is-invalid')
     }
-  )
-})
-
-
-form_action = (response, action) => {
-  action = action.replace(window.location.origin + '/api/auth/', '')
-  switch (action.slice(0, -1)) {
-    case 'register':
-      AlertMDB("Вы успешно зарегистрировались! Теперь подтвердите ваш email, Вам отправлено письмо", "green")
-      break
-    case 'token':
-      //запись в локалсторадж
-      //редирект на главную
-      break
-    case 'password':
-      break
-    case 'reset_password':
-      break
-    case 'verify_activation':
   }
-  console.log(response, action)
+  if (form_valid) {
+    authForm.querySelector('button[type=submit]').disabled = true
+    switch (action) {
+      case 'register':
+        AlertMDB("Вы успешно зарегистрировались! Вам отправлено письмо на email. Подтвердите вашу почту", "green")
+        break
+      case 'token':
+        localStorage.setItem('username', result.username)
+        localStorage.setItem('access_token', result.access_token)
+        if (loginCheck.checked) {
+          localStorage.setItem('password', value.password)
+        }
+        AlertMDB("Вы успешно авторизовались!", "green")
+        break
+      case 'password':
+        console.log('password')
+        break
+      case 'reset_password':
+        AlertMDB("Письмо отправленно на email", "green")
+        break
+      case 'password_confirm':
+        AlertMDB("Пароль успешно изменён", "green")
+    }
+  }
 }
-
-

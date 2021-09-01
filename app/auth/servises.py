@@ -36,7 +36,7 @@ async def create_token(username: str, hashed_password: str):
                        settings.JWT_SECRET,
                        algorithm=settings.JWT_ALGORITHM)
 
-    return dict(token_type="bearer", access_token=token)
+    return {"token_type": "bearer", "access_token": token, "username": username}
 
 
 async def get_user_from_username_or_email(username: str, db: Session):
@@ -59,11 +59,11 @@ async def get_current_user(
 
         if user.hashed_password != payload["hashed_password"]:
             raise HTTPException(
-                status_code=401, detail="Please refresh token"
+                status_code=403, detail="Please refresh token"
             )
     except:
         raise HTTPException(
-            status_code=401, detail="Invalid Token"
+            status_code=403, detail="Invalid Token"
         )
 
     return schemas.UserHashPassword.from_orm(user)

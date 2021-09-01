@@ -1,24 +1,39 @@
 {% extends 'auth/login.html' %}
 
 {% block title %}
-<title>Повторный запрос на подтверждение Email</title>
+<title>Верификация аккаунта</title>
 {% endblock %}
 
 {% block card %}
 <div>
-  <h1 class="mb-4">Повторный запрос на подтверждение Email</h1>
-  <form method="PATCH" action="/api/auth/verify_activation/" class="needs-validation auth">
-    <!-- Email input -->
-    <div class="form-outline mb-4">
-      <input type="email" id="registerEmail" class="form-control"/>
-      <label class="form-label" for="registerEmail">Логин или Email</label>
-    </div>
-
-    <!-- Submit button -->
-    <button type="submit" class="btn btn-primary btn-block mb-3">
-      Отправить
-    </button>
-  </form>
+  <h4>Ожидание верификации ...</h4>
 </div>
-
+<script>
+  fetch('/api/auth/verify_activation', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer {{token}}'
+    },
+    body: ''
+  }).then(
+    async response => ({
+      status: response.status,
+      body: await response.text(),
+    })
+  ).then(
+    response => {
+      response = JSON.parse(response.body)
+      let h3 = document.querySelector('h4')
+      if (typeof (response.is_verified) != "undefined") {
+        localStorage.setItem('access_token', '{{token}}')
+        localStorage.setItem('username', response.username)
+        h3.innerText = 'Вы успешно подтвердили email'
+      }else{
+        h3.innerText = 'Ошибка верификации email'
+        localStorage.removeItem('access_token')
+      }
+    }
+  )
+</script>
 {% endblock %}

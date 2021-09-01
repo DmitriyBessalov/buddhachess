@@ -1,0 +1,25 @@
+{% extends 'auth/login.html' %}
+
+{% block title %}
+<title>Повторный запрос на подтверждение Email</title>
+{% endblock %}
+
+{% block card %}
+<div>
+  <h1 class="mb-4">Повторный запрос на подтверждение Email</h1>
+  <form method="PATCH" action="/api/auth/repeat_verify_activation" id="authForm" class="needs-validation">
+    <!-- Email input -->
+    <div class="form-outline mb-4">
+      <input type="text" id="registerEmail" name="username" class="form-control" minlength="4" required/>
+      <label class="form-label" for="registerEmail">Логин или Email</label>
+      <div class="invalid-feedback"></div>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary btn-block mt-3">
+      Отправить
+    </button>
+  </form>
+</div>
+
+{% endblock %}
