@@ -4,7 +4,7 @@ from passlib.context import CryptContext
 
 from db import get_db
 from app.auth import schemas, models, servises
-from app.schemas import HTTP_Error
+from app.base.schemas import HTTP_Error
 
 router = APIRouter()
 

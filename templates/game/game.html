@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Войти</title>
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<!-- Container for demo purpose -->
+<div class="container my-5 py-5">
+
+  <!-- Section: Design Block -->
+  <section class="text-center">
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body p-4">
+            {% block card %}
+            <!-- Pills content -->
+              <div id="pills-login">
+
+              </div>
+              {% endblock %}
+
+
+            <!-- Pills content -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--Section: Design Block-->
+
+</div>
+<!-- Container for demo purpose -->
+
+{% endblock %}
