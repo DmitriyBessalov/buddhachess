@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-<title>Войти</title>
+<title>Присоединится к игре</title>
 {% endblock %}
 
 {% block head %}
@@ -21,36 +21,36 @@
             <div>
               Создать новую игру:
             </div>
-            <form class="text-start mt-3">
+            <form class="text-start mt-3" id="CreateGame">
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadio1"/>
+                <input class="form-check-input" type="radio" name="chess_variant" id="flexRadio1" value="classic"/>
                 <label class="form-check-label" for="flexRadio1">Класические</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadio2"/>
+                <input class="form-check-input" type="radio" name="chess_variant" id="flexRadio2" value="960"/>
                 <label class="form-check-label" for="flexRadio2">Фишера 960</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadio3"/>
+                <input class="form-check-input" type="radio" name="chess_variant" id="flexRadio3" value="iy"/>
                 <label class="form-check-label" for="flexRadio3">Инь-ян</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadio4"/>
+                <input class="form-check-input" type="radio" name="chess_variant" id="flexRadio4" value="flang"/>
                 <label class="form-check-label" for="flexRadio4">Фланговая</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadio5"/>
+                <input class="form-check-input" type="radio" name="chess_variant" id="flexRadio5" value="iy-flang"/>
                 <label class="form-check-label" for="flexRadio5">Инь-ян / Фланговая</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadio6" checked/>
+                <input class="form-check-input" type="radio" name="chess_variant" id="flexRadio6" value="iy-fib" checked/>
                 <label class="form-check-label" for="flexRadio6">Инь-ян / Фибоначчи</label>
               </div>
               <div class="mt-3">
-                <select class="select">
-                  <option value="1">Белый</option>
-                  <option value="2">Чёрный</option>
-                  <option value="3">Произвольный</option>
+                <select name="color" class="select">
+                  <option value="white">Белый</option>
+                  <option value="black">Чёрный</option>
+                  <option value="random">Произвольный</option>
                 </select>
                 <label class="form-label select-label">Цвет фигур</label>
               </div>
@@ -67,42 +67,49 @@
         <div class="card">
           <div class="card-body">
             <div>
-              Подключиться к созданным играм:
+              Присоединится к созданным играм:
             </div>
-            <div class="border rounded-2 p-3 mt-3 text-start">
-              <div class="d-flex justify-content-between">
-                <p>
-                  Инь-ян / Фланговая <br> Белыми
-                </p>
-                <div class="chip chip-md">
-                  <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-6.jpg" alt="Contact Person"/>
-                  John Doe
-                  <i class="close fas fa-times"></i>
-                </div>
-              </div>
-              <button class="btn btn-primary btn-block mt-3">
-                Играть
-              </button>
+
+            <!--            <div class="border rounded-2 p-3 mt-3 text-start">-->
+            <!--              <div class="d-flex justify-content-between">-->
+            <!--                <p>-->
+            <!--                  Инь-ян / Фланговая <br> Белыми-->
+            <!--                </p>-->
+            <!--                <div class="chip chip-md">-->
+            <!--                  <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-6.jpg" alt="Contact Person"/>-->
+            <!--                  John Doe-->
+            <!--                  <i class="close fas fa-times"></i>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--              <button class="btn btn-primary btn-block mt-3">-->
+            <!--                Играть-->
+            <!--              </button>-->
+            <!--            </div>-->
+
+
+            <!--            <div class="border rounded-2 p-3 mt-3 text-start">-->
+            <!--              <div class="d-flex justify-content-between">-->
+            <!--                <p>-->
+            <!--                  Инь-ян / Фланговая <br> Белыми-->
+            <!--                </p>-->
+            <!--                <div class="chip chip-md">-->
+            <!--                  <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-6.jpg" alt="Contact Person"/>-->
+            <!--                  John Doe-->
+            <!--                  <i class="close fas fa-times"></i>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--              <button class="btn btn-primary btn-block mt-3" disabled>-->
+            <!--                Играть-->
+            <!--              </button>-->
+            <!--            </div>-->
+
+
+            <div id="ListGames">
             </div>
 
             <div class="border rounded-2 p-3 mt-3 text-start">
-              <div class="d-flex justify-content-between">
-                <p>
-                  Инь-ян / Фланговая <br> Белыми
-                </p>
-                <div class="chip chip-md">
-                  <img src="https://mdbootstrap.com/img/Photos/Avatars/avatar-6.jpg" alt="Contact Person"/>
-                  John Doe
-                  <i class="close fas fa-times"></i>
-                </div>
-              </div>
-              <button class="btn btn-primary btn-block mt-3" disabled>
-                Играть
-              </button>
-            </div>
-
-            <div class="border rounded-2 p-3 mt-3 text-start">
-              Нет доступных партий, вы можете пригласить соперников из нашего <a href="https://t.me/BuddhaChess">телеграм чата</a>
+              Нет доступных партий, вы можете пригласить соперников из нашего <a href="https://t.me/BuddhaChess">телеграм
+              чата</a>
             </div>
 
           </div>
@@ -114,5 +121,57 @@
 
 </div>
 <!-- Container for demo purpose -->
+<script>
+  window.websocket = new WebSocket(`ws://localhost:8000/ws/game/create`)
+  wsReady = () => {
+    let values = {}
+    values['cmd'] = "show_games"
+    values['access_token'] = "null"
 
+    console.log(JSON.stringify(values))
+    window.websocket.send(JSON.stringify(values))
+    window.websocket.onclose = () => {
+      console.log('onclose')
+    }
+
+    window.websocket.onmessage = function (e) {
+      let message = JSON.parse(e.data)
+      console.log(message)
+
+      switch (message.cmd) {
+        case "anonimous_login": {
+          sessionStorage.setItem("access_token", message.access_token)
+          break
+        }
+        case "join_game": {
+          if (message.rival_black === localStorage.getItem("username") ||
+            message.rival_white === localStorage.getItem("username")
+          ) {
+            sessionStorage.setItem("game_id_" + message.game_id, JSON.stringify(message))
+            window.location.replace('/ru/game/' + message.game_id)
+          }
+        }
+      }
+
+      if (((message.cmd === "list_games") || (message.cmd === "join_game"))) {
+        // setGameList(message.list_games)
+        // Object.entries(message.list_games).forEach(([key, value]) => {
+        //   setTimeout(rmGame, (value.ttl - 1) * 1000, value.game_id)
+        // })
+      }
+    }
+  }
+
+  CreateGame.onsubmit = async (e) => {
+    e.preventDefault()
+    const data = new FormData(event.target)
+    const formJSON = Object.fromEntries(data.entries())
+    formJSON.token='adsf'
+    window.websocket.send(JSON.stringify(formJSON))
+  }
+
+  auth_session()
+
+  setTimeout(wsReady, 800)
+</script>
 {% endblock %}

@@ -5,10 +5,13 @@
   {% block title %}
   <title>Шахматы будды</title>
   {% endblock %}
-  <link rel="stylesheet" href="/static/libs/mdb/css/mdb.min.css"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"/>
-  <link rel="stylesheet" href="/static/css/style.css">
   <link rel="shortcut icon" href="/static/img/game/a.svg">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"/>
+  <link rel="stylesheet" href="/static/libs/mdb/css/mdb.min.css"/>
+  <link rel="stylesheet" href="/static/libs/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script type="text/javascript" src="/static/js/web.js"></script>
+
 </head>
 <body>
 <!-- Navbar -->
@@ -28,11 +31,11 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
         <li class="nav-item">
-          <a class="nav-link" href="/ru/index">Документация</a>
+          <a class="nav-link" href="/ru/docs">Документация</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="/ru/game/start">Играть</a>
+          <a class="nav-link" href="/ru/game/create">Играть</a>
         </li>
 
       </ul>
@@ -92,7 +95,7 @@
   {% endblock %}
 </div>
 
-<script type="text/javascript" src="/static/mdb/js/mdb.min.js"></script>
+<script type="text/javascript" src="/static/libs/mdb/js/mdb.min.js"></script>
 
 
 {% block head %}

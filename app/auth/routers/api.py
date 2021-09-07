@@ -1,3 +1,4 @@
+from random import randint
 from fastapi import APIRouter, Depends, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
@@ -39,6 +40,11 @@ async def login(user: OAuth2PasswordRequestForm = Depends(), db=Depends(get_db))
     if CryptContext(schemes='bcrypt', deprecated="auto").verify(user.password, db_user.hashed_password):
         return await servises.create_token(db_user.username, db_user.hashed_password)
     return HTTP_Error("password", "Wrong password")
+
+
+@router.get("/create_anonimous_token")
+async def create_anonimous_token():
+    return await servises.create_token_anonimous('Anonimous_' + str(randint(1000000, 9999999)))
 
 
 @router.get("/me")
