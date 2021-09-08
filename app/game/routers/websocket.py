@@ -1,11 +1,11 @@
-from random import random, randint
+from random import randint
 from typing import List
 import json
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends
 import redis
 
-from app.auth import servises
+from app.auth.servises import get_current_user_with_anonimous
 
 r = redis.Redis(host='127.0.0.1', port=6379, db=1)
 
@@ -44,8 +44,9 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 
-@router.websocket("/create")
-async def websocket_endpoint(websocket: WebSocket, group_id='start', username=Depends(servises.get_current_user)):
+@router.websocket("/create/{session}/{access_token}")
+async def websocket_endpoint(websocket: WebSocket, access_token: str, session: str, group_id='start'):
+    username = get_current_user_with_anonimous(token=access_token)
     await manager.connect(websocket, group_id, username)
     try:
         while True:

@@ -36,10 +36,14 @@ async function auth_session() {
       auth_session()
     } else {
       sessionStorage.setItem("username", user.username)
-      if (user.access_token !== undefined)
+      if (user.access_token !== undefined){
         localStorage.setItem("access_token", user.access_token)
-      if (user.access_token_anonimous !== undefined)
+        return user.access_token
+      }
+      if (user.access_token_anonimous !== undefined) {
         sessionStorage.setItem("anonimous_access_token", user.access_token_anonimous)
+        return user.access_token_anonimous
+      }
     }
   }
 }

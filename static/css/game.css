@@ -1,0 +1,179 @@
+div.coords, div.mask {
+  display: none;
+}
+
+piece{
+    transform-origin:center center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    background-size: cover;
+    will-change: transform;
+    /*pointer-events: none;*/
+}
+
+piece.black.pawn{
+    background-image: url('/static/img/game/p.svg');
+}
+piece.black.rook{
+    background-image: url('/static/img/game/r.svg');
+}
+piece.black.knight{
+    background-image: url('/static/img/game/n.svg');
+}
+piece.black.bishop{
+    background-image: url('/static/img/game/b.svg');
+}
+piece.black.queen{
+    background-image: url('/static/img/game/q.svg');
+}
+piece.black.king{
+    background-image: url('/static/img/game/k.svg');
+}
+piece.white.pawn{
+    background-image: url('/static/img/game/P.svg');
+}
+piece.white.rook{
+    background-image: url('/static/img/game/R.svg');
+}
+piece.white.knight{
+    background-image: url('/static/img/game/N.svg');
+}
+piece.white.bishop{
+    background-image: url('/static/img/game/B.svg');
+}
+piece.white.queen{
+    background-image: url('/static/img/game/Q.svg');
+}
+piece.white.king{
+    background-image: url('/static/img/game/K.svg');
+}
+
+/***************/
+piece.black.heavy-pawn{
+    background-image: url('/static/img/game/h.svg');
+}
+piece.black.regal-pawn{
+    background-image: url('/static/img/game/e.svg');
+}
+piece.black.archbishop{
+    background-image: url('/static/img/game/a.svg');
+}
+piece.black.pegasus{
+    background-image: url('/static/img/game/g.svg');
+}
+piece.black.centaur{
+    background-image: url('/static/img/game/t.svg');
+}
+piece.black.chancellor{
+    background-image: url('/static/img/game/c.svg');
+}
+piece.white.heavy-pawn{
+    background-image: url('/static/img/game/H.svg');
+}
+piece.white.regal-pawn{
+    background-image: url('/static/img/game/E.svg');
+}
+piece.white.archbishop{
+    background-image: url('/static/img/game/A.svg');
+}
+piece.white.pegasus{
+    background-image: url('/static/img/game/G.svg');
+}
+piece.white.centaur{
+    background-image: url('/static/img/game/T.svg');
+}
+piece.white.chancellor{
+    background-image: url('/static/img/game/C.svg');
+}
+
+piece.dragover{
+    opacity:0.2;
+}
+
+div.coords{
+    position: absolute;
+    display: flex;
+    pointer-events: none;
+    user-select: none;
+    text-shadow: 0 1px 2px #000;
+    font-weight: bold;
+}
+
+div.coord {
+    width: 60px; height: 60px;
+    color: #ffffdd;
+}
+
+div.coords.collum {
+    text-align: end;
+}
+
+/* кружок для показа возможных ходов клетке для завершения хода */
+div.move-dest {
+    background: radial-gradient(rgba(20,85,30,0.5) 19%, rgba(0,0,0,0) 20%);
+}
+
+/* клетка с которой будут ходить */
+div.selected {
+    background-color: rgba(20,85,30,0.5);
+}
+
+/* клетка под ударом */
+div.oc.move-dest {
+    background: radial-gradient(transparent 0%, transparent 79%, rgba(20,85,0,0.3) 80%);
+}
+
+/* Клетка под мышкой */
+div.move-dest.hover {
+    background: radial-gradient(rgba(20,85,30,0.5) 100%, rgba(0,0,0,0) 100%);
+}
+
+
+/* клетки показывают ходом */
+div.last-move {
+    background-color: rgba(0,155,199,0.41);
+}
+
+#board{
+    will-change: transition, height, width;
+}
+
+#board_path_top{
+    will-change: transition, height;
+    height: 360px;
+    width: 720px;
+    background-image: url('/static/img/game/board.svg');
+    position: relative;
+}
+#board_path_bottom{
+    will-change: transition, width;
+    height: 360px;
+    width: 720px;
+    background-image: url('/static/img/game/board.svg');
+    position: relative;
+}
+
+div.mask{
+    position: absolute;
+    background-image: url('/static/img/game/x.svg');
+    width: 60px;
+    height: 60px;
+    display: flex;
+    pointer-events: none;
+    user-select: none;
+}
+
+#moves_list{
+    width: 135px;
+    padding: 8px;
+}
+#moves_list>div{
+    display: flex;
+    flex-direction: row;
+}
+#moves_list>div>div{
+    padding: 2px;
+}
