@@ -13,11 +13,18 @@ const AlertMDB = (text, color) => {
   </div>'
 }
 
+let access_token
 async function auth_session() {
   let
     response,
     user
-  if (sessionStorage.getItem("username") === null) {
+  if (sessionStorage.getItem("username") !== null) {
+    if (localStorage.getItem("access_token") !== null) {
+      access_token = localStorage.getItem("access_token")
+    } else {
+      access_token = localStorage.getItem("anonimous_access_token")
+    }
+  } else {
     if (localStorage.getItem("access_token") === null) {
       response = await fetch('/api/auth/create_anonimous_token')
     } else {
@@ -36,13 +43,13 @@ async function auth_session() {
       auth_session()
     } else {
       sessionStorage.setItem("username", user.username)
-      if (user.access_token !== undefined){
+      if (user.access_token !== undefined) {
         localStorage.setItem("access_token", user.access_token)
-        return user.access_token
+        access_token = user.access_token
       }
       if (user.access_token_anonimous !== undefined) {
-        sessionStorage.setItem("anonimous_access_token", user.access_token_anonimous)
-        return user.access_token_anonimous
+        localStorage.setItem("anonimous_access_token", user.access_token_anonimous)
+        access_token = user.access_token_anonimous
       }
     }
   }
