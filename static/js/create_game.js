@@ -64,9 +64,10 @@ wsReady = () => {
       let listGames = ''
       let MylistGames = ''
 
+
       if (message.cmd === "list_games") {
         for (key in message.list_games) {
-          //console.log(message.list_games[key])
+          // console.log(message.list_games[key].user, sessionStorage.getItem('username'))
           if (message.list_games[key].user === sessionStorage.getItem('username')) {
             MylistGames += '<div class="border rounded-2 p-3 mt-3 text-start" id="game_id_' + message.list_games[key].game_id + '">\
               <div class="d-flex justify-content-between">\
@@ -94,7 +95,7 @@ wsReady = () => {
                     ' + message.list_games[key].user + '\
                   </div>\
                 </div>\
-                <button class="btn btn-primary btn-block mt-3">\
+                <button class="btn btn-primary btn-block mt-3" id="' + message.list_games[key].game_id + '" onclick="joingame(this)">\
                   Играть\
                 </button>\
               </div>'
@@ -108,17 +109,22 @@ wsReady = () => {
           my_games.style.display = "block"
         my_games_list.innerHTML = MylistGames
         list_games.innerHTML = listGames
+
+        CreateGame.onsubmit = async (e) => {
+          e.preventDefault()
+          const data = new FormData(event.target)
+          const formJSON = Object.fromEntries(data.entries())
+          formJSON['cmd'] = "create_game"
+          window?.websocket.send(JSON.stringify(formJSON))
+        }
+
+        joingame=(event)=>{
+          // console.log(event.id)
+          window?.websocket.send('{"cmd":"join_game","game_id": "' + event.id + '"}')
+        }
       }
     }
   }
-}
-
-CreateGame.onsubmit = async (e) => {
-  e.preventDefault()
-  const data = new FormData(event.target)
-  const formJSON = Object.fromEntries(data.entries())
-  formJSON['cmd'] = "create_game"
-  window?.websocket.send(JSON.stringify(formJSON))
 }
 
 auth_session().then(

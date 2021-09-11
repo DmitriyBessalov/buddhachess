@@ -57,15 +57,16 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 
 async def get_current_user(
-    db=Depends(get_db),
     token: str = Depends(oauth2_scheme),
-    anonimous: bool = False
+    anonimous: bool = False,
+    db=Depends(get_db),
 ):
     try:
         payload = jwt.decode(token, settings.JWT_SECRET, algorithms=["HS256"])
 
         if anonimous:
-            return {'username': payload["username"]}
+            return {'username': payload["username"],
+                    'access_token_anonimous': token}
 
         user = db.query(models.User).get(payload["username"])
 
@@ -81,11 +82,11 @@ async def get_current_user(
     return schemas.UserHashPassword.from_orm(user)
 
 
-async def get_current_user_with_anonimous(
-        db=Depends(get_db),
-        token: str = Depends(oauth2_scheme),
-):
-    return await get_current_user(db, token, True)
+# async def get_current_user_with_anonimous(
+#         db=Depends(get_db),
+#         token: str = Depends(oauth2_scheme),
+# ):
+#     return await get_current_user(db, token, True)
 
 
 async def send_email(templates: str, title: str, request: Request, db_user: schemas.UserHashPassword):

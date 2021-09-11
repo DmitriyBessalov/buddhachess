@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 
+from app.auth.servises import oauth2_scheme
 from db import get_db
 from app.auth import schemas, models, servises
 from app.base.schemas import HTTP_Error
@@ -43,9 +44,11 @@ async def login(user: OAuth2PasswordRequestForm = Depends(), db=Depends(get_db))
 
 
 @router.get("/create_anonimous_token")
-async def create_anonimous_token():
-    return await servises.create_token_anonimous('Anonimous_' + str(randint(1000000, 9999999)))
-
+async def create_anonimous_token(token: str = 'null'):
+    if token == "undefined" or token == "null":
+        return await servises.create_token_anonimous('Anonimous_' + str(randint(1000000, 9999999)))
+    else:
+        return await servises.get_current_user(token, True, db=Depends(get_db))
 
 @router.get("/me")
 async def user_info(user: schemas.User = Depends(servises.get_current_user)):
