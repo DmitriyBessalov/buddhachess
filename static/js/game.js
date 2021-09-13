@@ -1,4 +1,13 @@
-let game = JSON.parse(sessionStorage.getItem("game_id_" + document.location.pathname.split('/')[3])),
+// let game = JSON.parse(sessionStorage.getItem("game_id_" + document.location.pathname.split('/')[3])),
+
+let game = {}
+game['game_id'] = 34654
+game['rival_white'] = 'Anonimous_6969785'
+game['rival_black'] = 'Anonimous_7777777'
+game['chess_variant'] = 'classic'
+game['position_960'] = '34'
+
+let
   board,
   board_path_top,
   board_path_bottom,
@@ -18,47 +27,93 @@ let game = JSON.parse(sessionStorage.getItem("game_id_" + document.location.path
   move = -1,
   moves
 
+board = document.querySelector(`#board`)
+board_path_top = document.querySelector(`#board_path_top`)
+board_path_bottom = document.querySelector(`#board_path_bottom`)
+board_style = document.querySelector(`#board_style`)
 
-window.websocket = new WebSocket('/ws/game/' + game.game_id)
+
+wsReady = () => {
+  if (window.websocket === undefined || window.websocket?.readyState === 3) {
+    window.websocket = new WebSocket('ws://' + location.hostname + ':8000/ws/game/' + game.game_id + '/' + access_token)
+  }
+
+  if (window.websocket?.readyState === 0) {
+    setTimeout(wsReady, 1000)
+    return
+  }
+
+  if (!ws_init) {
+    ws_init = true
+    window.websocket.send('{"cmd": "join_game"}')
+
+    window.websocket.onclose = () => {
+      console.log('onclose')
+      delete window.websocket
+      ws_init = false
+      setTimeout(wsReady, 3000)
+    }
+
+    window.websocket.onmessage = function (e) {
+      let message = JSON.parse(e.data)
+      console.log(message)
+
+      switch (message.cmd) {
+        case "join_game": {
+          break
+        }
+        case "move": {
+        }
+      }
+    }
+
+    window.websocket.onmessage = function (e) {
+      let message = JSON.parse(e.data)
+      console.log(e.data)
+      if (message.cmd === "move") {
+        move = parseInt(message.move_num)
+        color_block()
+        if (color_current_move === color) {
+          mov(message.move, 1.5)
+        }
+      }
+    }
+  }
+}
 
 if (!game) {
   window.location.replace('/')
-} else if (game.rival_white === localStorage.getItem("email") || game.rival_white === sessionStorage.getItem("anonimous_username")) {
+} else if (game.rival_white === sessionStorage.getItem("username")) {
   color = true
-} else if (game.rival_black === localStorage.getItem("email") || game.rival_black === sessionStorage.getItem("anonimous_username")) {
+} else if (game.rival_black === sessionStorage.getItem("username")) {
   color = false
 }
 console.log(game, color)
 
 switch (game.chess_variant) {
-  case "1":
+  case "iy":
     FEN = "rbnKEnqr/pppbpppp/8/8/8/8/PPPBPPPP/RBNkeNQR w - - 0 1"
-    moves = "f2f3a7a5g1f2b8a7e2e3b7b6c2c3e7e5f1g3b6b5c1d3f7f6b2b4a5b4d3b4a7c5d8c7c5b4c3b4d7e6c7b7a8a2a1a2e6a2b1a2g8a2b7c8d1c2g3e4f6f5e4c5a2c4e3e4c4b4f2e3b4d2e3d2e1d2c8c7d2a5c7d6f8g6e8e6h8d8c5d7a5a6d6c5d8c8c5d5g6f4d5e5f4e6e5f5e6d4f5f4a6d6f4e3c8c3e3f2d6d7h1e1b5b4e4e5d7f5e5e6d4e6e1e2c2d3e2e3d3c4e3e4c4b3e4e1f5c5f2f1c3e3e1b1b3a2b1d1c5c4f1f2c4e2f2g3e2d1h2h3g7g5g3g4h7h6h3h4d1d4g4g3d4h4"
+    // moves = "f2f3a7a5g1f2b8a7e2e3b7b6c2c3e7e5f1g3b6b5c1d3f7f6b2b4a5b4d3b4a7c5d8c7c5b4c3b4d7e6c7b7a8a2a1a2e6a2b1a2g8a2b7c8d1c2g3e4f6f5e4c5a2c4e3e4c4b4f2e3b4d2e3d2e1d2c8c7d2a5c7d6f8g6e8e6h8d8c5d7a5a6d6c5d8c8c5d5g6f4d5e5f4e6e5f5e6d4f5f4a6d6f4e3c8c3e3f2d6d7h1e1b5b4e4e5d7f5e5e6d4e6e1e2c2d3e2e3d3c4e3e4c4b3e4e1f5c5f2f1c3e3e1b1b3a2b1d1c5c4f1f2c4e2f2g3e2d1h2h3g7g5g3g4h7h6h3h4d1d4g4g3d4h4"
     break
-  case "2":
+  case "flang":
     FEN = "rhntknhr/pppbbppp/8/8/8/8/PPPBBPPP/RHNTKNHR w - - 0 1"
-    moves = "h2h4h7h5f1g3g7g6b2b4c7c5c1d3f8e6a2a4b7b5b1b3c5c4b3c4b5c4d3f4e6f4d2f4e7b4c2c3b4a5f4g5d8e6e2c4e6c5d1b2g8g7g5d2c8d6c4e2f7f5f2f400g3f1b8b6f1e3a7a6g2g3c5e6g1g2b6b5a4b5a6b5b2d3f8c8e3c2d6c400c4d2d3d2a5c3d2b3c3a1c2a1c8b8a1c2a8a4f1a1a4a1c2a1b5b4a1c2d7b5e2b5b8b5c2b4e6d6b3a4b5b8a4a5b8a8a5b6a8a1g1f2a1b1b6a5d6c5b4a6c5d3f2f3d3d2f3f2b1e1g3g4d2e2"
+    // moves = "h2h4h7h5f1g3g7g6b2b4c7c5c1d3f8e6a2a4b7b5b1b3c5c4b3c4b5c4d3f4e6f4d2f4e7b4c2c3b4a5f4g5d8e6e2c4e6c5d1b2g8g7g5d2c8d6c4e2f7f5f2f400g3f1b8b6f1e3a7a6g2g3c5e6g1g2b6b5a4b5a6b5b2d3f8c8e3c2d6c400c4d2d3d2a5c3d2b3c3a1c2a1c8b8a1c2a8a4f1a1a4a1c2a1b5b4a1c2d7b5e2b5b8b5c2b4e6d6b3a4b5b8a4a5b8a8a5b6a8a1g1f2a1b1b6a5d6c5b4a6c5d3f2f3d3d2f3f2b1e1g3g4d2e2"
     break
-  case "3":
+  case "iy-flang":
     FEN = "rtpKEbnr/pppbnppp/8/8/8/8/PPPBNPPP/RTPkeBNR w - - 0 1"
-    moves = "h2h3b7b6g2g4d7b5a2a4b5c6b2b4f7f5e2g3g7g6c2c4a7a6b4b5a6b5c4b5c6d7g4f5g6f5h3h4e7g6f1h3f5f4g3h5c7c6b5c6d7c6h3c8a8a4a1a4c6a4h5f4a4c2b1a2g8e7c8h3g6h4a2b4e7g6b4b5f8c5f4e6c2d3b5a4b8a7e6c5b6c5a4c5d3b5c5d6d1c2f2f4h8f8f4f5g6h8d2g5h4f5h3f5c2b3h1h7a7b6d6e7f8f5e7f5b3c4h7h8b5d7f5f6d7a4h8h7c4c5g1e2b6b5g5d2c5d6h7b7b5c5d2b4d6c6b4c5c6b7e2c3a4c5f6e6b7a6e6c7a6a5c7b6"
+    // moves = "h2h3b7b6g2g4d7b5a2a4b5c6b2b4f7f5e2g3g7g6c2c4a7a6b4b5a6b5c4b5c6d7g4f5g6f5h3h4e7g6f1h3f5f4g3h5c7c6b5c6d7c6h3c8a8a4a1a4c6a4h5f4a4c2b1a2g8e7c8h3g6h4a2b4e7g6b4b5f8c5f4e6c2d3b5a4b8a7e6c5b6c5a4c5d3b5c5d6d1c2f2f4h8f8f4f5g6h8d2g5h4f5h3f5c2b3h1h7a7b6d6e7f8f5e7f5b3c4h7h8b5d7f5f6d7a4h8h7c4c5g1e2b6b5g5d2c5d6h7b7b5c5d2b4d6c6b4c5c6b7e2c3a4c5f6e6b7a6e6c7a6a5c7b6"
     break
-  case "4":
+  case "iy-fib":
     FEN = "tcrqhKEbnrag/pppppbnppppp/12/12/12/12/12/12/12/12/PPPPPBNPPPPP/TCRQHkeBNRAG w - - 0 1"
-    moves = "j2j3c11c10i2i4d11d10l1j2j11j10k1i2i11i9c2c3a12c11a1c2c10c8c3c5b12c10i2h4k12i10g2f4l12j11h1f3j11h10e2e3g11f9f3l11j10j9h4i10h11i10f2i9h10j11d1i10d10d9i10j9h12i11i9f2d12d11j2h3e11e9f4g2f9h10j9j4f1e2g2h4j11h12j4i3c10c2c1c2e2d3c2c1d9d4e3d4e9d4h4f3d3e4h3i9h10j11i3g3j11i9g3i9i11j10i9j4e4f3f2j10j12j10j4i9f3e4i1h3e4e9i9h4j10h10h4i3h10h3i3h3d11h3g12f11c11d11f11d11e12d11f12e11h3e10"
+    // moves = "j2j3c11c10i2i4d11d10l1j2j11j10k1i2i11i9c2c3a12c11a1c2c10c8c3c5b12c10i2h4k12i10g2f4l12j11h1f3j11h10e2e3g11f9f3l11j10j9h4i10h11i10f2i9h10j11d1i10d10d9i10j9h12i11i9f2d12d11j2h3e11e9f4g2f9h10j9j4f1e2g2h4j11h12j4i3c10c2c1c2e2d3c2c1d9d4e3d4e9d4h4f3d3e4h3i9h10j11i3g3j11i9g3i9i11j10i9j4e4f3f2j10j12j10j4i9f3e4i1h3e4e9i9h4j10h10h4i3h10h3i3h3d11h3g12f11c11d11f11d11e12d11f12e11h3e10"
     break
-  case "15":
+  case "classic":
     FEN = chess960[518]
     break
-  case "16":
+  case "960":
     FEN = chess960[game.position_960]
 }
 
-
-board = document.querySelector(`#board`)
-board_path_top = document.querySelector(`#board_path_top`)
-board_path_bottom = document.querySelector(`#board_path_bottom`)
-board_style = document.querySelector(`#board_style`)
 
 const create_piece = (code_piece, id, _x, _y) => {
   //console.log( code_piece, id, _x, _y)
@@ -220,7 +275,7 @@ const coordinate_shift = (position, shift = false) => {
   position['shift_x'] = position.x
   position['shift_y'] = position.y
 
-  if (game.chess_variant !== '4') {
+  if (game.chess_variant !== 'iy-fib') {
     position['shift_x'] = position.x + 2
     if ((position_board_path(position.y) === 'bottom') && (!shift)) {
       position['shift_y'] = position.y + 4
@@ -344,7 +399,7 @@ const size0 = (time = 3) => {
   board_size = 8
   board_position = 0
   let _style
-  if (game.chess_variant !== '4') {
+  if (game.chess_variant !== 'iy-fib') {
     if (!board_rotate) {
       _style = "" +
         "div#board_path_top>div.coords.collum {" +
@@ -573,14 +628,14 @@ const size3 = (time) => {
 }
 
 
-if (game.chess_variant === '4') {
+if (game.chess_variant === 'iy-fib') {
   size3(0)
   if (color === false)
     rotate()
   generate_start_position()
   setTimeout(size0, 3000)
 } else {
-  if (game.chess_variant === '1' || game.chess_variant === '16' || game.chess_variant === '15')
+  if (game.chess_variant === 'iy' || game.chess_variant === '960' || game.chess_variant === 'classic')
     size1(0)
   else
     size0(0)
@@ -619,7 +674,7 @@ const fibonacci = (move) => {
 
 const moves_list = document.querySelector(`#moves_list`)
 const next_move = (_move) => {
-  if (game.chess_variant === '4')
+  if (game.chess_variant === 'iy-fib')
     fibonacci(_move)
   if (movesArray[_move]) {
     let div2 = document.createElement('div')
@@ -643,7 +698,7 @@ const coordinate_shift_from_view = (x, y) => {
   let position = {}
   position['x'] = x.charCodeAt(0) - 99
 
-  if (game.chess_variant === '4') {
+  if (game.chess_variant === 'iy-fib') {
     if (board_size === 12)
       position.x = x.charCodeAt(0) - 97
     position['y'] = 12 - y
@@ -672,44 +727,35 @@ const coordinate_shift_from_view = (x, y) => {
 // }
 
 
-const ws_init = () => {
-  //console.log(websocket.readyState)
-  switch (window.websocket.readyState) {
-    case 0:
-      setTimeout(ws_init, 500)
-      break
-    case 1:
-      let values = {}
-      values['cmd'] = "connect_game"
-      values['jwt'] = localStorage.getItem("jwt")
-      values['anonimous_jwt'] = sessionStorage.getItem("anonimous_jwt")
-      values['game_id'] = game['game_id']
-      console.log(JSON.stringify(values))
-      window.websocket.send(JSON.stringify(values))
-      window.websocket.onclose = () => {
-        ws_init()
-      }
-      break
-    case 2:
-    case 3:
-      window.websocket.close()
-      setTimeout(ws_init, 1600)
-      break
-    default:
-  }
+// wsReady = () => {
+//   //console.log(websocket.readyState)
+//   switch (window?.websocket.readyState) {
+//     case 0:
+//       setTimeout(wsReady, 500)
+//       break
+//     case 1:
+//       let values = {}
+//       values['cmd'] = "connect_game"
+//       values['jwt'] = localStorage.getItem("jwt")
+//       values['anonimous_jwt'] = sessionStorage.getItem("anonimous_jwt")
+//       values['game_id'] = game['game_id']
+//       console.log(JSON.stringify(values))
+//       window.websocket.send(JSON.stringify(values))
+//       window.websocket.onclose = () => {
+//         ws_init()
+//       }
+//       break
+//     case 2:
+//     case 3:
+//       window.websocket.close()
+//       setTimeout(ws_init, 1600)
+//       break
+//     default:
+//   }
 
-  window.websocket.onmessage = function (e) {
-    let message = JSON.parse(e.data)
-    console.log(e.data)
-    if (message.cmd === "move") {
-      move = parseInt(message.move_num)
-      color_block()
-      if (color_current_move === color) {
-        mov(message.move, 1.5)
-      }
-    }
-  }
-}
-if (window.websocket.readyState !== 1)
-  setTimeout(ws_init, 1000)
 
+auth_session().then(
+  r => {
+    wsReady()
+  }
+)

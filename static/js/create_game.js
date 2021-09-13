@@ -1,6 +1,3 @@
-const page_session = Math.round(Math.random() * 10 ** 12)
-let ws_init = false
-
 const chess_variant = {
   "iy": "Инь-ян",
   "flang": "Фланговая",
@@ -23,7 +20,7 @@ RemoveElem = (id) => {
 
 wsReady = () => {
   if (window.websocket === undefined || window.websocket?.readyState === 3) {
-    window.websocket = new WebSocket('ws://localhost:8000/ws/game/create/' + page_session + '/' + access_token)
+    window.websocket = new WebSocket('ws://' + location.hostname + ':8000/ws/game/create/' + ws_page_session + '/' + access_token)
   }
 
   if (window.websocket?.readyState === 0) {
@@ -47,25 +44,14 @@ wsReady = () => {
       console.log(message)
 
       switch (message.cmd) {
-        case "anonimous_login": {
-          sessionStorage.setItem("access_token", message.access_token)
-          break
-        }
         case "join_game": {
-          if (message.rival_black === localStorage.getItem("username") ||
-            message.rival_white === localStorage.getItem("username")
-          ) {
-            sessionStorage.setItem("game_id_" + message.game_id, JSON.stringify(message))
-            location.replace('/ru/game/' + message.game_id)
-          }
+          document.location.href = '/ru/game/' + message.game_id
         }
       }
 
-      let listGames = ''
-      let MylistGames = ''
-
-
       if (message.cmd === "list_games") {
+        let listGames = ''
+        let MylistGames = ''
         for (key in message.list_games) {
           // console.log(message.list_games[key].user, sessionStorage.getItem('username'))
           if (message.list_games[key].user === sessionStorage.getItem('username')) {
@@ -109,22 +95,22 @@ wsReady = () => {
           my_games.style.display = "block"
         my_games_list.innerHTML = MylistGames
         list_games.innerHTML = listGames
-
-        CreateGame.onsubmit = async (e) => {
-          e.preventDefault()
-          const data = new FormData(event.target)
-          const formJSON = Object.fromEntries(data.entries())
-          formJSON['cmd'] = "create_game"
-          window?.websocket.send(JSON.stringify(formJSON))
-        }
-
-        joingame=(event)=>{
-          // console.log(event.id)
-          window?.websocket.send('{"cmd":"join_game","game_id": "' + event.id + '"}')
-        }
       }
     }
   }
+}
+
+CreateGame.onsubmit = async (e) => {
+  e.preventDefault()
+  const data = new FormData(event.target)
+  const formJSON = Object.fromEntries(data.entries())
+  formJSON['cmd'] = "create_game"
+  window?.websocket.send(JSON.stringify(formJSON))
+}
+
+joingame = (event) => {
+  window?.websocket.send('{"cmd":"join_game","game_id": "' + event.id + '"}')
+  document.location.href = '/ru/game/' + event.id
 }
 
 auth_session().then(

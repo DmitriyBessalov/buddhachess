@@ -17,22 +17,22 @@ class ConnectionManager:
         self.active_connections = {}
         print('init')
 
-    async def connect(self, websocket: WebSocket, group_id: str, ws_session_id: int):
+    async def connect(self, websocket: WebSocket, group_id: int, ws_session_id: int):
         await websocket.accept()
         if group_id not in self.active_connections:
             self.active_connections[group_id] = {}
         self.active_connections[group_id][ws_session_id] = websocket
         print('connect')
 
-    def disconnect(self, group_id: str, ws_session_id: int):
+    def disconnect(self, group_id: int, ws_session_id: int):
         del self.active_connections[group_id][ws_session_id]
         print('disconnect')
 
-    async def send_personal_message(self, message: str, group_id: str, ws_session_id: int):
+    async def send_personal_message(self, message: str, group_id: int, ws_session_id: int):
         await self.active_connections[group_id][ws_session_id].send_text(message)
         print('send_personal_message: ' + message)
 
-    async def broadcast(self, message: str, group_id: str):
+    async def broadcast(self, message: str, group_id: int):
         for _ws_session_id in self.active_connections[group_id]:
             await self.active_connections[group_id][_ws_session_id].send_text(message)
             print('broadcast: ' + message)
@@ -61,7 +61,7 @@ async def listgames(remove_ws_session_id: int = 0):
 
 
 @router.websocket("/create/{ws_session_id}/{access_token}")
-async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_token: str, group_id='start'):
+async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_token: str, group_id: int = 0):
     username = await create_anonimous_token(access_token)
     await manager.connect(websocket, group_id, ws_session_id)
     try:
@@ -102,14 +102,46 @@ async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_to
                 game = ast.literal_eval(game.decode("utf-8"))
 
                 if game['user'] != username['username']:
+
+                    if game['color'] == "true":
+                        game["rival_white"] = game["user"]
+                        game["rival_black"] = username['username']
+                    else:
+                        game["rival_black"] = game['user']
+                        game["rival_white"] = username['username']
+
+                    response_data = {"cmd": "join_game",
+                                     "game_id": ws_json['game_id']
+                                     }
+                    await manager.send_personal_message(json.dumps(response_data), group_id, game["ws_session_id"])
+
+    except WebSocketDisconnect:
+        manager.disconnect(group_id, ws_session_id)
+        response_data = await listgames(ws_session_id)
+        await manager.broadcast(json.dumps(response_data), group_id)
+
+
+@router.websocket("/{game_id}/{access_token}")
+async def websocket_endpoint(websocket: WebSocket, game_id: int, access_token: str):
+    username = await create_anonimous_token(access_token)
+    ws_session_id = randint(10 ** 10, 10 ** 11)
+    await manager.connect(websocket, game_id, ws_session_id)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            print(data)
+            ws_json = json.loads(data)
+            response_data = {}
+
+            if ws_json['cmd'] == 'join_game':
+                game = r.get('game_' + str(ws_json['game_id']))
+                game = ast.literal_eval(game.decode("utf-8"))
+
+                if game['user'] != username['username']:
                     response_data = {"cmd": "join_game",
                                      "game_id": ws_json['game_id'],
                                      "chess_variant": game["chess_variant"],
                                      "position_960": game['position_960'],
-                                     # "time_while": 2160,
-                                     # "time_black": 2160,
-                                     # "time_move_add": 5,
-                                     # "time_start": time.time()
                                      }
                     if 'position_960' in game:
                         response_data["rival_white"] = game['position_960']
@@ -121,7 +153,11 @@ async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_to
                         response_data["rival_black"] = game['user']
                         response_data["rival_white"] = username['username']
 
+            if ws_json['cmd'] == "move":
+                pass
+
+
     except WebSocketDisconnect:
-        manager.disconnect(group_id, ws_session_id)
+        manager.disconnect(game_id, ws_session_id)
         response_data = await listgames(ws_session_id)
-        await manager.broadcast(json.dumps(response_data), group_id)
+        await manager.broadcast(json.dumps(response_data), game_id)

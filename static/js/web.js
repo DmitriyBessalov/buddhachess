@@ -14,6 +14,8 @@ const AlertMDB = (text, color) => {
 }
 
 let access_token
+const ws_page_session = Math.round(Math.random() * 10 ** 12)
+let ws_init = false
 
 async function auth_session() {
   let
@@ -23,7 +25,7 @@ async function auth_session() {
     if (localStorage.getItem("access_token") !== null) {
       access_token = localStorage.getItem("access_token")
     } else {
-      access_token = localStorage.getItem("anonimous_access_token")
+      access_token = localStorage.getItem("access_token_anonimous")
     }
   } else {
     if (localStorage.getItem("access_token") === null) {
