@@ -1,4 +1,4 @@
-div.coords, div.mask {
+div.coords, div.bmask {
   display: none;
 }
 
@@ -156,7 +156,7 @@ div.last-move {
     position: relative;
 }
 
-div.mask{
+div.bmask{
     position: absolute;
     background-image: url('/static/img/game/x.svg');
     width: 60px;
