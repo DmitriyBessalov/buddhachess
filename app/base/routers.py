@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.get("/")
 async def redirect_home():
-    return RedirectResponse("/ru/docs", status_code=302)
+    return RedirectResponse("/ru/docs/", status_code=302)
 
 
 @router.get("/admin")
