@@ -102,7 +102,7 @@ wsReady = () => {
 
 CreateGame.onsubmit = async (e) => {
   e.preventDefault()
-  const data = new FormData(event.target)
+  const data = new FormData(e.target)
   const formJSON = Object.fromEntries(data.entries())
   formJSON['cmd'] = "create_game"
   window?.websocket.send(JSON.stringify(formJSON))

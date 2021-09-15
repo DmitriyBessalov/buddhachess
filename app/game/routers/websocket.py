@@ -7,7 +7,8 @@ import redis
 
 from app.auth.routers.api import create_anonimous_token
 
-r = redis.Redis(host='127.0.0.1', port=6379, db=1)
+r1 = redis.Redis(host='127.0.0.1', port=6379, db=1)
+r2 = redis.Redis(host='127.0.0.1', port=6379, db=2)
 
 router = APIRouter()
 
@@ -44,15 +45,15 @@ manager = ConnectionManager()
 async def listgames(remove_ws_session_id: int = 0):
     data = ''
 
-    for key in r.keys('game_*'):
-        k = ast.literal_eval(r.get(key).decode("utf-8"))
-        k['ttl'] = r.ttl(key)
+    for key in r1.keys('game_*'):
+        k = ast.literal_eval(r1.get(key).decode("utf-8"))
+        k['ttl'] = r1.ttl(key)
 
         if k['ws_session_id'] != remove_ws_session_id:
             del k['ws_session_id']
             data = data + str(k) + ', '
         else:
-            r.delete("game_" + str(k["game_id"]))
+            r1.delete("game_" + str(k["game_id"]))
 
     if data == '':
         data = '[]'
@@ -88,7 +89,7 @@ async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_to
                 if ws_json['chess_variant'] == "960":
                     r_dict["position_960"] = response_data['position_960'] = randint(0, 959)
 
-                r.set('game_' + str(game_id), json.dumps(r_dict), ex=600)
+                r1.set('game_' + str(game_id), json.dumps(r_dict), ex=600)
 
                 response_data = await listgames()
                 await manager.broadcast(json.dumps(response_data), group_id)
@@ -98,22 +99,27 @@ async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_to
                 await manager.send_personal_message(json.dumps(response_data), group_id, ws_session_id)
 
             if ws_json['cmd'] == 'join_game':
-                game = r.get('game_' + str(ws_json['game_id']))
+                game = r1.get('game_' + str(ws_json['game_id']))
                 game = ast.literal_eval(game.decode("utf-8"))
 
                 if game['user'] != username['username']:
+                    r1.delete('game_' + str(ws_json['game_id']))
+
+                    response_data = {"cmd": "join_game", "game_id": ws_json['game_id']}
+                    await manager.send_personal_message(json.dumps(response_data), group_id, game["ws_session_id"])
 
                     if game['color'] == "true":
-                        game["rival_white"] = game["user"]
-                        game["rival_black"] = username['username']
+                        game["user_white"] = game["user"]
+                        game["user_black"] = username['username']
                     else:
-                        game["rival_black"] = game['user']
-                        game["rival_white"] = username['username']
+                        game["user_black"] = game['user']
+                        game["user_white"] = username['username']
 
-                    response_data = {"cmd": "join_game",
-                                     "game_id": ws_json['game_id']
-                                     }
-                    await manager.send_personal_message(json.dumps(response_data), group_id, game["ws_session_id"])
+                    del game["ws_session_id"]
+                    del game["user"]
+                    del game["color"]
+
+                    r2.set(ws_json['game_id'], json.dumps(game), ex=86000)
 
     except WebSocketDisconnect:
         manager.disconnect(group_id, ws_session_id)
@@ -131,33 +137,20 @@ async def websocket_endpoint(websocket: WebSocket, game_id: int, access_token: s
             data = await websocket.receive_text()
             print(data)
             ws_json = json.loads(data)
-            response_data = {}
 
             if ws_json['cmd'] == 'join_game':
-                game = r.get('game_' + str(ws_json['game_id']))
-                game = ast.literal_eval(game.decode("utf-8"))
-
-                if game['user'] != username['username']:
-                    response_data = {"cmd": "join_game",
-                                     "game_id": ws_json['game_id'],
-                                     "chess_variant": game["chess_variant"],
-                                     "position_960": game['position_960'],
-                                     }
-                    if 'position_960' in game:
-                        response_data["rival_white"] = game['position_960']
-
-                    if game['color'] == "true":
-                        response_data["rival_white"] = game["user"]
-                        response_data["rival_black"] = username['username']
-                    else:
-                        response_data["rival_black"] = game['user']
-                        response_data["rival_white"] = username['username']
+                game = r2.get(game_id)
+                response_data = ast.literal_eval(game.decode("utf-8"))
+                response_data['cmd'] = 'join_game'
+                await manager.send_personal_message(json.dumps(response_data), game_id, ws_session_id)
 
             if ws_json['cmd'] == "move":
-                pass
-
+                await manager.broadcast(json.dumps(ws_json), game_id)
 
     except WebSocketDisconnect:
-        manager.disconnect(game_id, ws_session_id)
+
+
         response_data = await listgames(ws_session_id)
+        manager.disconnect(game_id, ws_session_id)
+
         await manager.broadcast(json.dumps(response_data), game_id)
