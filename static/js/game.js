@@ -31,7 +31,7 @@ wsReady = () => {
   if (window.websocket === undefined || window.websocket?.readyState === 3) {
     let s = ''
     if (location.protocol==='https:'){s='s'}
-      window.websocket = new WebSocket('ws ' + s + '://' + location.host + '/ws/game/' + game.game_id + '/' + access_token)
+      window.websocket = new WebSocket('ws' + s + '://' + location.host + '/ws/game/' + game.game_id + '/' + access_token)
   }
 
   if (window.websocket?.readyState === 0) {
