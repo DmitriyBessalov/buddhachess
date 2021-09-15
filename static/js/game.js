@@ -29,8 +29,9 @@ board_style = document.querySelector(`#board_style`)
 
 wsReady = () => {
   if (window.websocket === undefined || window.websocket?.readyState === 3) {
-    window.websocket = new WebSocket('ws://' + location.hostname + ':8000/ws/game/' + game.game_id + '/' + access_token)
-
+    let s = ''
+    if (location.protocol==='https:'){s='s'}
+      window.websocket = new WebSocket('ws ' + s + '://' + location.host + '/ws/game/' + game.game_id + '/' + access_token)
   }
 
   if (window.websocket?.readyState === 0) {

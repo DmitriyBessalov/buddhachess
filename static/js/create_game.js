@@ -20,7 +20,9 @@ RemoveElem = (id) => {
 
 wsReady = () => {
   if (window.websocket === undefined || window.websocket?.readyState === 3) {
-    window.websocket = new WebSocket('wss://' + location.hostname + '/ws/game/create/' + ws_page_session + '/' + access_token)
+    let s = ''
+    if (location.protocol==='https:'){s='s'}
+    window.websocket = new WebSocket('ws' + s + '://' + location.host + '/ws/game/create/' + ws_page_session + '/' + access_token)
   }
 
   if (window.websocket?.readyState === 0) {
