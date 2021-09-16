@@ -19,7 +19,8 @@ let
   board_position_top,
   board_rotate = "",
   move = -1,
-  moves
+  moves,
+  game_init_status = false
 
 board = document.querySelector(`#board`)
 board_path_top = document.querySelector(`#board_path_top`)
@@ -59,7 +60,6 @@ wsReady = () => {
       switch (message.cmd) {
         case "join_game": {
           game = message
-          console.log(game)
 
           if (game.user_white === sessionStorage.getItem("username")) {
             color = true
@@ -197,10 +197,9 @@ const remove_piece = (old_piece) => {
 const hide_and_remove_piece = (id, time_animation= 400) => {
   let old_piece = document.querySelector("#block_" + id)
   if (old_piece) {
-    old_piece.style.transition = 'opacity 0ms linear'
     old_piece.style.transition = 'opacity ' + time_animation + 'ms linear'
-    old_piece.className = old_piece.classList + ' hide_piece'
-    setTimeout(remove_piece, time_animation, old_piece)
+    old_piece.style.opacity = '0'
+    setTimeout(remove_piece, 10000, old_piece)
   }
 }
 
@@ -212,14 +211,15 @@ const set_piece_position = (piece, end_x, end_y, _x, _y, id, time_animation = 0,
 
   piece.id = "block_" + id
   if (position_board_path(_y) === "top") {
-    piece.setAttribute("style", "transform: translate(" + _x * 60 + "px, " + _y * 60 + "px);transition: " + time_animation + "s;")
+    piece.setAttribute("style", "transform: translate(" + _x * 60 + "px, " + _y * 60 + "px);")
     if (board_path_top)
       board_path_top.appendChild(piece)
   } else {
-    piece.setAttribute("style", "transform: translate(" + _x * 60 + "px, " + (_y - 6) * 60 + "px);transition: " + time_animation + "s;")
+    piece.setAttribute("style", "transform: translate(" + _x * 60 + "px, " + (_y - 6) * 60 + "px);")
     if (board_path_bottom)
       board_path_bottom.appendChild(piece)
   }
+
 }
 
 
@@ -484,9 +484,9 @@ const size0 = (time = 3) => {
       ".size4{" +
       "opacity: 0;" +
       "}" + _style
-  const bmask = ['e4', 'e5', 'd4', 'd5']
+  const bmask = ['f4', 'g4', 'f9', 'g9']
   bmask.forEach((value) => {
-    hide_and_remove_piece(value, 5000)
+    hide_and_remove_piece(value, 8000)
   })
 }
 
@@ -624,28 +624,31 @@ const size3 = (time) => {
       "}" + _style
   const bmask = ['b3', 'b10', 'c4', 'c9', 'd5', 'd8', 'i5', 'i8', 'j4', 'j9', 'k3', 'k10']
   bmask.forEach((value) => {
-    hide_and_remove_piece(value, 6000)
+    hide_and_remove_piece(value, 8000)
   })
 }
 
 game_init = () => {
-  if (game.chess_variant === 'iy-fib') {
-    size3(0)
-    if (color === false)
-      rotate()
-    generate_start_position()
-    setTimeout(size0, 3000)
-  } else {
-    if (game.chess_variant === 'iy' || game.chess_variant === '960' || game.chess_variant === 'classic')
-      size1(0)
-    else
-      size0(0)
-    if (color === false)
-      rotate()
-    generate_start_position()
-  }
+  if (!game_init_status) {
+    game_init_status = true
+    if (game.chess_variant === 'iy-fib') {
+      size3(0)
+      if (color === false)
+        rotate()
+      generate_start_position()
+      setTimeout(size0, 3000)
+    } else {
+      if (game.chess_variant === 'iy' || game.chess_variant === '960' || game.chess_variant === 'classic')
+        size1(0)
+      else
+        size0(0)
+      if (color === false)
+        rotate()
+      generate_start_position()
+    }
 //get_start_moves(moves)
-  color_block()
+    color_block()
+  }
 }
 
 const fibonacci = (move) => {
