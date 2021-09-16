@@ -93,6 +93,11 @@ piece.dragover{
     opacity:0.2;
 }
 
+div.piece_rotate.hide_piece{
+  opacity: 0;
+  transition: opacity 400ms linear;
+}
+
 div.coords{
     position: absolute;
     display: flex;
@@ -167,7 +172,7 @@ div.bmask{
 }
 
 #moves_list{
-    width: 135px;
+    width: 155px;
     padding: 8px;
 }
 #moves_list>div{
