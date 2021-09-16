@@ -26,5 +26,5 @@ async def redirect_home():
 
 @router.get("/robots.txt")
 async def redirect_home():
-    return HTMLResponse("User-agent * \nDisallow /")
+    return HTMLResponse("User-agent * \nAllow /")
 
