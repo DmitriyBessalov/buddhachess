@@ -21,8 +21,8 @@
         <style id="board_style">
 
         </style>
-        <div style="position:absolute; margin: auto; top: 0; right: 0; bottom: 0; left: 0; width: 1000px; height: 720px; display: flex ">
-          <div id="container" style="overflow:hidden; width: 720px; height: 720px">
+        <div id="board_pozition">
+          <div id="board_container">
             <div id="board_rotate">
               <div id="board" style="cursor:pointer">
                 <div style="height:50%">
@@ -138,19 +138,20 @@
               </div>
             </div>
           </div>
-          <div style="margin: 0 0 0 25px">
-            <div data-mdb-perfect-scrollbar="true" style="position: absolute; height: 720px; border: #0a0ae3 1px solid;" id="block_moves_list">
+          <div style="margin: 0 0 0 25px; width: 158px">
+            <div data-mdb-perfect-scrollbar="true" style="position: absolute; height: 720px; border: #0a0ae3 1px solid;"
+                 id="block_moves_list">
               <div id="moves_list">
               </div>
             </div>
-<!--            <div style="height: 20px; border: #0a0ae3 1px solid; display: flex; flex-direction: column;">-->
-<!--              <button onClick="size0(1)">Размер 8x8 (без центра)</button>-->
-<!--              <button onClick="size1(1)">Размер 8x8</button>-->
-<!--              <button onClick="size2(1)">Размер 10x10</button>-->
-<!--              <button onClick="size3(1)">Размер 12x12</button>-->
-<!--              <button onClick="detour_moves()">Сделать ход</button>-->
-<!--              <button onClick="rotate()">Перевернуть доску</button>-->
-<!--            </div>-->
+            <!--            <div style="height: 20px; border: #0a0ae3 1px solid; display: flex; flex-direction: column;">-->
+            <!--              <button onClick="size0(1)">Размер 8x8 (без центра)</button>-->
+            <!--              <button onClick="size1(1)">Размер 8x8</button>-->
+            <!--              <button onClick="size2(1)">Размер 10x10</button>-->
+            <!--              <button onClick="size3(1)">Размер 12x12</button>-->
+            <!--              <button onClick="detour_moves()">Сделать ход</button>-->
+            <!--              <button onClick="rotate()">Перевернуть доску</button>-->
+            <!--            </div>-->
           </div>
         </div>
       </div>

@@ -1,9 +1,9 @@
 div.coords, div.bmask {
-  display: none;
+    display: none;
 }
 
-piece{
-    transform-origin:center center;
+piece {
+    transform-origin: center center;
     position: absolute;
     top: 0;
     left: 0;
@@ -14,90 +14,112 @@ piece{
     /*pointer-events: none;*/
 }
 
-piece.black.pawn{
+piece.black.pawn {
     background-image: url('/static/img/game/p.svg');
 }
-piece.black.rook{
+
+piece.black.rook {
     background-image: url('/static/img/game/r.svg');
 }
-piece.black.knight{
+
+piece.black.knight {
     background-image: url('/static/img/game/n.svg');
 }
-piece.black.bishop{
+
+piece.black.bishop {
     background-image: url('/static/img/game/b.svg');
 }
-piece.black.queen{
+
+piece.black.queen {
     background-image: url('/static/img/game/q.svg');
 }
-piece.black.king{
+
+piece.black.king {
     background-image: url('/static/img/game/k.svg');
 }
-piece.white.pawn{
+
+piece.white.pawn {
     background-image: url('/static/img/game/P.svg');
 }
-piece.white.rook{
+
+piece.white.rook {
     background-image: url('/static/img/game/R.svg');
 }
-piece.white.knight{
+
+piece.white.knight {
     background-image: url('/static/img/game/N.svg');
 }
-piece.white.bishop{
+
+piece.white.bishop {
     background-image: url('/static/img/game/B.svg');
 }
-piece.white.queen{
+
+piece.white.queen {
     background-image: url('/static/img/game/Q.svg');
 }
-piece.white.king{
+
+piece.white.king {
     background-image: url('/static/img/game/K.svg');
 }
 
 /***************/
-piece.black.heavy-pawn{
+piece.black.heavy-pawn {
     background-image: url('/static/img/game/h.svg');
 }
-piece.black.regal-pawn{
+
+piece.black.regal-pawn {
     background-image: url('/static/img/game/e.svg');
 }
-piece.black.archbishop{
+
+piece.black.archbishop {
     background-image: url('/static/img/game/a.svg');
 }
-piece.black.pegasus{
+
+piece.black.pegasus {
     background-image: url('/static/img/game/g.svg');
 }
-piece.black.centaur{
+
+piece.black.centaur {
     background-image: url('/static/img/game/t.svg');
 }
-piece.black.chancellor{
+
+piece.black.chancellor {
     background-image: url('/static/img/game/c.svg');
 }
-piece.white.heavy-pawn{
+
+piece.white.heavy-pawn {
     background-image: url('/static/img/game/H.svg');
 }
-piece.white.regal-pawn{
+
+piece.white.regal-pawn {
     background-image: url('/static/img/game/E.svg');
 }
-piece.white.archbishop{
+
+piece.white.archbishop {
     background-image: url('/static/img/game/A.svg');
 }
-piece.white.pegasus{
+
+piece.white.pegasus {
     background-image: url('/static/img/game/G.svg');
 }
-piece.white.centaur{
+
+piece.white.centaur {
     background-image: url('/static/img/game/T.svg');
 }
-piece.white.chancellor{
+
+piece.white.chancellor {
     background-image: url('/static/img/game/C.svg');
 }
 
-piece.dragover{
-    opacity:0.2;
+piece.dragover {
+    opacity: 0.2;
 }
 
-div.piece_rotate{
+div.piece_rotate {
     opacity: 1;
 }
 
-div.coords{
+div.coords {
     position: absolute;
     display: flex;
     pointer-events: none;
@@ -107,7 +129,8 @@ div.coords{
 }
 
 div.coord {
-    width: 60px; height: 60px;
+    width: 60px;
+    height: 60px;
     color: #ffffdd;
 }
 
@@ -117,42 +140,43 @@ div.coords.collum {
 
 /* кружок для показа возможных ходов клетке для завершения хода */
 div.move-dest {
-    background: radial-gradient(rgba(20,85,30,0.5) 19%, rgba(0,0,0,0) 20%);
+    background: radial-gradient(rgba(20, 85, 30, 0.5) 19%, rgba(0, 0, 0, 0) 20%);
 }
 
 /* клетка с которой будут ходить */
 div.selected {
-    background-color: rgba(20,85,30,0.5);
+    background-color: rgba(20, 85, 30, 0.5);
 }
 
 /* клетка под ударом */
 div.oc.move-dest {
-    background: radial-gradient(transparent 0%, transparent 79%, rgba(20,85,0,0.3) 80%);
+    background: radial-gradient(transparent 0%, transparent 79%, rgba(20, 85, 0, 0.3) 80%);
 }
 
 /* Клетка под мышкой */
 div.move-dest.hover {
-    background: radial-gradient(rgba(20,85,30,0.5) 100%, rgba(0,0,0,0) 100%);
+    background: radial-gradient(rgba(20, 85, 30, 0.5) 100%, rgba(0, 0, 0, 0) 100%);
 }
 
 
 /* клетки показывают ходом */
 div.last-move {
-    background-color: rgba(0,155,199,0.41);
+    background-color: rgba(0, 155, 199, 0.41);
 }
 
-#board{
+#board {
     will-change: transition, height, width;
 }
 
-#board_path_top{
+#board_path_top {
     will-change: transition, height;
     height: 360px;
     width: 720px;
     background-image: url('/static/img/game/board.svg');
     position: relative;
 }
-#board_path_bottom{
+
+#board_path_bottom {
     will-change: transition, width;
     height: 360px;
     width: 720px;
@@ -160,7 +184,7 @@ div.last-move {
     position: relative;
 }
 
-div.bmask{
+div.bmask {
     position: absolute;
     background-image: url('/static/img/game/x.svg');
     width: 60px;
@@ -170,14 +194,49 @@ div.bmask{
     user-select: none;
 }
 
-#moves_list{
+#moves_list {
     width: 155px;
     padding: 8px;
 }
-#moves_list>div{
+
+#moves_list > div {
     display: flex;
     flex-direction: row;
 }
-#moves_list>div>div{
+
+#moves_list > div > div {
     padding: 2px;
+}
+
+#board_pozition{
+    position:absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 1000px;
+    height: 720px;
+    display: flex;
+    justify-content: center;
+}
+
+#board_container{
+    overflow:hidden;
+    width: 720px;
+    height: 100%;
+}
+
+html.horizon {
+    transform: rotate(-90deg);
+    transform-origin: left top;
+    width: 100vh;
+    overflow-x: hidden;
+    position: absolute;
+    top: 100%;
+    left: 40%;
+}
+
+html.horizon nav {
+    display: none;
 }

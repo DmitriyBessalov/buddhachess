@@ -18,9 +18,11 @@ let
   mouse_position_dragend = {},
   board_position_top,
   board_rotate = "",
+  board_click = false,
   move = -1,
   moves,
-  game_init_status = false
+  game_init_status = false,
+  select_piece
 
 board = document.querySelector(`#board`)
 board_path_top = document.querySelector(`#board_path_top`)
@@ -246,12 +248,14 @@ const generate_start_position = () => {
 
 const mouse_position = (evt) => {
   let mouse_pos = {}
-  mouse_pos['x'] = (Math.ceil(evt.layerX / (60 * board_scale))) - 1
-  mouse_pos['y'] = Math.ceil((evt.y - board_position_top) / (60 * board_scale)) - 1
+    mouse_pos['x'] = (Math.ceil(evt.layerX / (60 * board_scale))) - 1
+    mouse_pos['y'] = Math.ceil((evt.y - board_position_top) / (60 * board_scale)) - 1
+
   if (board_rotate) {
     mouse_pos.x = board_size - mouse_pos['x'] - 1
     mouse_pos.y = board_size - mouse_pos['y'] - 1
   }
+  console.log(mouse_pos)
   return mouse_pos
 }
 
@@ -323,6 +327,7 @@ const mov = (r, t) => {
   movesArray.push([arr[1], arr[2], arr[3], arr[4]])
   next_move(move)
   color_block()
+  board_click = false
 }
 
 const chess_move = (piece, _mouse_position_dragend, _mouse_position_dragstart) => {
@@ -342,29 +347,52 @@ const chess_move = (piece, _mouse_position_dragend, _mouse_position_dragstart) =
   }
 }
 
-
-board.addEventListener(`dragstart`, (evt) => {
+const dragstart=(evt)=>{
   board_position_top = board.getBoundingClientRect().top
   mouse_position_dragstart = coordinate_shift(mouse_position(evt))
+  select_piece = document.querySelector("#block_" + mouse_position_dragstart.view)
+}
+
+board.addEventListener(`dragstart`, (evt) => {
+  dragstart(evt)
 })
 
 board.addEventListener(`dragover`, (evt) => {
   mouse_position_dragover = mouse_position(evt)
   if (mouse_position_old_dragover.x !== mouse_position_dragover.x || mouse_position_old_dragover.y !== mouse_position_dragover.y) {
     mouse_position_old_dragover = mouse_position_dragover
-    //console.log('mouseover', mouse_position_dragover)
+    console.log('mouseover', mouse_position_dragover)
   }
-  //console.log('mousemove', evt.layerX, evt.layerY,)
+  console.log('mousemove', evt.layerX, evt.layerY,)
 })
 
-board.addEventListener(`dragend`, (evt) => {
+const dragend=(evt)=>{
   const check = mouse_position(evt)
+  console.log(check.view, mouse_position_dragstart.view)
   if ((check.x >= 0) && (check.y >= 0) && (check.x < board_size) && (check.y < board_size)) {
     mouse_position_dragend = coordinate_shift(mouse_position(evt))
-    chess_move(evt.target, mouse_position_dragend, mouse_position_dragstart)
+    console.log(mouse_position_dragend.view, mouse_position_dragstart.view)
+    if (select_piece)
+      chess_move(select_piece, mouse_position_dragend, mouse_position_dragstart)
   }
   evt.target.classList.remove(`dragover`)
+}
+
+board.addEventListener(`dragend`, (evt) => {
+  dragend(evt)
 })
+
+// board.addEventListener(`click`, (evt) => {
+//   if (!board_click){
+//     dragstart(evt)
+//     console.log('0', mouse_position_dragstart)
+//     board_click = true
+//   }else{
+//     console.log('1', mouse_position_dragstart)
+//     dragend(evt)
+//     dragstart(evt)
+//   }
+// })
 
 const rotate = () => {
   if (!board_rotate) {
@@ -758,6 +786,10 @@ const coordinate_shift_from_view = (x, y) => {
 //     default:
 //   }
 
+if (document.documentElement.clientWidth < document.documentElement.clientHeight){
+    html.classList.add('horizon')
+    board_pozition.style.transform='scale(' + document.documentElement.clientWidth/740 + ')'
+}
 
 auth_session().then(
   r => {
