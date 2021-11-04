@@ -1,11 +1,14 @@
 # Шахматы будды на трансформационной доске
 
-Новая версия шахмат Будды находится в разработке, архитектуре FastAPI+jinja2
+Стек технологий: FastAPI, SQLAlchemy, PostgreSQL, MDBootstrap, Redis, WebSocket
 
-Начальное конфигурирование:
-mv ./.env.sample ./.env
+[Правила](http://buddhachess.org/) 
+
+[Играть в шахматы](https://buddhachess.org/ru/game/)
+
+[Telegram группа](https://t.me/BuddhaChess)
+
+
+Начальное конфигурирование: \
+mv ./.env.sample ./.env \
 mv ./alembic.ini.sample ./alembic.ini.env
-
-Прыдущая версия доведена до уровня когда можно играть на сайте http://buddhachess.org/ без верификации ходов
-
-Правила игры изложены в [группе](https://www.facebook.com/groups/255866512768044)

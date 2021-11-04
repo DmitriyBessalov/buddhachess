@@ -71,7 +71,7 @@ wsReady = () => {
 
           switch (game.chess_variant) {
             case "iy":
-              FEN = "rbnKEnqr/pppbpppp/8/8/8/8/PPPBPPPP/RBNkeNQR w - - 0 1"
+              FEN = chess960[game.position]
               // moves = "f2f3a7a5g1f2b8a7e2e3b7b6c2c3e7e5f1g3b6b5c1d3f7f6b2b4a5b4d3b4a7c5d8c7c5b4c3b4d7e6c7b7a8a2a1a2e6a2b1a2g8a2b7c8d1c2g3e4f6f5e4c5a2c4e3e4c4b4f2e3b4d2e3d2e1d2c8c7d2a5c7d6f8g6e8e6h8d8c5d7a5a6d6c5d8c8c5d5g6f4d5e5f4e6e5f5e6d4f5f4a6d6f4e3c8c3e3f2d6d7h1e1b5b4e4e5d7f5e5e6d4e6e1e2c2d3e2e3d3c4e3e4c4b3e4e1f5c5f2f1c3e3e1b1b3a2b1d1c5c4f1f2c4e2f2g3e2d1h2h3g7g5g3g4h7h6h3h4d1d4g4g3d4h4"
               break
             case "flang":
@@ -90,7 +90,7 @@ wsReady = () => {
               FEN = chess960[518]
               break
             case "960":
-              FEN = chess960[game.position_960]
+              FEN = chess960[game.position]
           }
           game_init()
           break
@@ -221,7 +221,6 @@ const set_piece_position = (piece, end_x, end_y, _x, _y, id, time_animation = 0,
     if (board_path_bottom)
       board_path_bottom.appendChild(piece)
   }
-
 }
 
 

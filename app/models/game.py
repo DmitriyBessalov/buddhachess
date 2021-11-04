@@ -1,6 +1,5 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, sql
-from sqlalchemy.orm import relationship, backref
-from db import Base
+from sqlalchemy import Column, String, Integer
+from app.db.db import Base
 
 
 class Game(Base):
@@ -23,8 +22,8 @@ class Game(Base):
     # black = Column(Integer, ForeignKey())
     moves = Column(String)
 
-    # results = [
-    #     (0, 'Недоиграна'),
+    # status = [
+    #     (0, 'В игре'),
     #     (1, 'Белые победили'),
     #     (2, 'Чёрные победили'),
     #     (3, 'Белые сдались'),
@@ -37,14 +36,3 @@ class Game(Base):
     # result = Column
 
     # start_game = Column
-
-    # title = Column(String)
-    # text = Column(String(350))
-    # date = Column(DateTime(timezone=True), server_default=sql.func.now())
-    # user = Column(String, ForeignKey('user.id'))
-    # user_id = relationship("User")
-    # parent_id = Column(Integer, ForeignKey('microblog_posts.id'), nullable=True)
-    # children = relationship("Post", backref=backref('parent', remote_side=[id]))
-
-
-posts = Game.__table__

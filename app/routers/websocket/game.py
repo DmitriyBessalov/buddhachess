@@ -1,43 +1,12 @@
 from random import randint
 import json
 import ast
-# import time
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 import redis
 
-from app.auth.routers.api import create_anonimous_token
-
-r1 = redis.Redis(host='127.0.0.1', port=6379, db=1)
-r2 = redis.Redis(host='127.0.0.1', port=6379, db=2)
+r1 = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=1)
+r2 = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=2)
 
 router = APIRouter()
-
-
-class ConnectionManager:
-    def __init__(self):
-        self.active_connections = {}
-        print('init')
-
-    async def connect(self, websocket: WebSocket, group_id: int, ws_session_id: int):
-        await websocket.accept()
-        if group_id not in self.active_connections:
-            self.active_connections[group_id] = {}
-        self.active_connections[group_id][ws_session_id] = websocket
-        print('connect')
-
-    def disconnect(self, group_id: int, ws_session_id: int):
-        del self.active_connections[group_id][ws_session_id]
-        print('disconnect')
-
-    async def send_personal_message(self, message: str, group_id: int, ws_session_id: int):
-        await self.active_connections[group_id][ws_session_id].send_text(message)
-        print('send_personal_message: ' + message)
-
-    async def broadcast(self, message: str, group_id: int):
-        for _ws_session_id in self.active_connections[group_id]:
-            await self.active_connections[group_id][_ws_session_id].send_text(message)
-            print('broadcast: ' + message)
-
 
 manager = ConnectionManager()
 
@@ -87,7 +56,10 @@ async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_to
                 }
 
                 if ws_json['chess_variant'] == "960":
-                    r_dict["position_960"] = response_data['position_960'] = randint(0, 959)
+                    r_dict["position"] = response_data['position'] = randint(0, 959)
+
+                if ws_json['chess_variant'] == "iy":
+                    r_dict["position"] = response_data['position'] = randint(0, 45)
 
                 r1.set('game_' + str(game_id), json.dumps(r_dict), ex=600)
 
@@ -129,7 +101,7 @@ async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_to
 
 @router.websocket("/{game_id}/{access_token}")
 async def websocket_endpoint(websocket: WebSocket, game_id: int, access_token: str):
-    username = await create_anonimous_token(access_token)
+    # username = await create_anonimous_token(access_token)
     ws_session_id = randint(10 ** 10, 10 ** 11)
     await manager.connect(websocket, game_id, ws_session_id)
     try:
@@ -148,7 +120,6 @@ async def websocket_endpoint(websocket: WebSocket, game_id: int, access_token: s
                 await manager.broadcast(json.dumps(ws_json), game_id)
 
     except WebSocketDisconnect:
-
 
         response_data = await listgames(ws_session_id)
         manager.disconnect(game_id, ws_session_id)

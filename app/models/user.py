@@ -1,5 +1,5 @@
-from sqlalchemy import Column, String, Integer, DateTime, Boolean, CHAR
-from db import Base
+from sqlalchemy import Column, String, Boolean
+from app.db.db import Base
 
 
 class User(Base):
@@ -10,11 +10,8 @@ class User(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
     is_verified = Column(Boolean, default=False)
-    is_superuser = Column(Boolean, default=False)
+    group = Column(String, default='gamer')
     # date_birthday = Column(DateTime)
     # phone = models.IntegerField(verbose_name="Телефон", blank=True, null=True)
     # telegram = Column(String, unique=True)
     # ava = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Аватар", blank=True, null=True)
-
-
-users = User.__table__
