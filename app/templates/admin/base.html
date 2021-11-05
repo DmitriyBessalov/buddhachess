@@ -1,204 +1,102 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Material Design for Bootstrap</title>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
-    <!-- Google Fonts Roboto -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
-    <!-- MDB -->
-    <link rel="stylesheet" href="/static/libs/mdb/css/mdb.min.css" />
-    <!-- Custom styles -->
-<!--    <link rel="stylesheet" href="css/style.css" />-->
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+  <title>
+    {% block title %}
+    {{title}}
+    {% endblock %}
+  </title>
+  <link rel="shortcut icon" href="/static/img/icon.webp">
+  <link rel="stylesheet" href="/static/libs/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"/>
+  <link rel="stylesheet" href="/static/libs/mdb/css/mdb.min.css"/>
+  <link rel="stylesheet" href="/static/libs/mdb/plugins/css/all.min.css"/>
+  <link rel="stylesheet" href="/static/css/style.css"/>
 </head>
 <body>
-    <!-- Navigation -->
 <header>
-  
-  <style>
-    
-    body {
-      background-color: hsl(0, 0%, 96%);
-    }
-    @media (min-width: 1400px) {
-      main,
-      header,
-      #main-navbar {
-        padding-left: 240px;
-      }
-    }
-    
-  </style>
-  
-  <!-- Sidenav -->
   <nav id="sidenav-1" class="sidenav" data-mdb-hidden="false" data-mdb-accordion="true">
-    <a class="ripple d-flex justify-content-center py-4" href="#!" data-mdb-ripple-color="primary">
-      <img id="MDB-logo" src="https://mdbcdn.b-cdn.net/wp-content/uploads/2018/06/logo-mdb-jquery-small.png"
-        alt="MDB Logo" draggable="false" />
-    </a>
-
+    <h6 class="mt-4 mb-3 text-center">Шахматы будды</h6>
     <ul class="sidenav-menu">
       <li class="sidenav-item">
-        <a class="sidenav-link" href="">
-          <i class="fas fa-chart-area fa-fw me-3"></i><span>Webiste traffic</span></a>
-      </li>
-      <li class="sidenav-item">
-        <a class="sidenav-link"><i class="fas fa-cogs fa-fw me-3"></i><span>Settings</span></a>
-        <ul class="sidenav-collapse">
-          <li class="sidenav-item">
-            <a class="sidenav-link">Profile</a>
-          </li>
-          <li class="sidenav-item">
-            <a class="sidenav-link">Account</a>
-          </li>
-        </ul>
-      </li>
-      <li class="sidenav-item">
-        <a class="sidenav-link"><i class="fas fa-lock fa-fw me-3"></i><span>Password</span></a>
-        <ul class="sidenav-collapse">
-          <li class="sidenav-item">
-            <a class="sidenav-link">Request password</a>
-          </li>
-          <li class="sidenav-item">
-            <a class="sidenav-link">Reset password</a>
-          </li>
-        </ul>
+        <a class="sidenav-link" href="/adminpanel/user">
+          <i class="fas fa-user-graduate fa-fw me-3"></i>
+          <span>Пользователи</span>
+        </a>
       </li>
 
       <li class="sidenav-item">
-        <a class="sidenav-link" href="">
-          <i class="fas fa-chart-line fa-fw me-3"></i><span>Analytics</span></a>
-      </li>
-      <li class="sidenav-item">
-        <a class="sidenav-link" href="">
-          <i class="fas fa-chart-pie fa-fw me-3"></i><span>SEO</span></a>
-      </li>
-      <li class="sidenav-item">
-        <a class="sidenav-link" href="">
-          <i class="fas fa-chart-bar fa-fw me-3"></i><span>Orders</span></a>
-      </li>
-      <li class="sidenav-item">
-        <a class="sidenav-link" href="">
-          <i class="fas fa-globe fa-fw me-3"></i><span>International</span></a>
-      </li>
-      <li class="sidenav-item">
-        <a class="sidenav-link" href="">
-          <i class="fas fa-building fa-fw me-3"></i><span>Partners</span></a>
-      </li>
-      <li class="sidenav-item">
-        <a class="sidenav-link" href="">
-          <i class="fas fa-calendar fa-fw me-3"></i><span>Calendar</span></a>
-      </li>
-      <li class="sidenav-item">
-        <a class="sidenav-link" href="">
-          <i class="fas fa-users fa-fw me-3"></i><span>Users</span></a>
-      </li>
-      <li class="sidenav-item">
-        <a class="sidenav-link" href="">
-          <i class="fas fa-money-bill fa-fw me-3"></i><span>Sales</span></a>
+        <a class="sidenav-link" href="/adminpanel/game">
+          <i class="fas fa-quote-right fa-fw me-3"></i>
+          <span>Игры</span>
+        </a>
       </li>
     </ul>
   </nav>
-  <!-- Sidenav -->
 
-  <!-- Navbar -->
-  <nav id="main-navbar" class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
-    <!-- Container wrapper -->
-    <div class="container-fluid">
-      <!-- Toggler -->
-      <button data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1" class="btn shadow-0 p-0 me-3 d-block d-xxl-none"
-        aria-controls="#sidenav-1" aria-haspopup="true">
-        <i class="fas fa-bars fa-lg"></i>
-      </button>
+  <div class="container-fluid mt-2">
+    <a class="nav-link dropdown-toggle hidden-arrow d-flex align-items-center" style="position: fixed; right: 0; z-index: 100"
+       id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+      <i class="fas fa-user-circle fa-lg"></i>
+    </a>
 
-      <!-- Search form -->
-      <form class="d-none d-md-flex input-group w-auto my-auto">
-        <input autocomplete="off" type="search" class="form-control rounded"
-          placeholder='Search (ctrl + "/" to focus)' style="min-width: 225px" />
-        <span class="input-group-text border-0"><i class="fas fa-search"></i></span>
-      </form>
-
-      <!-- Right elements -->
-      <div class="d-flex align-items-center right-items">
-        <!-- Notifications -->
-        <a
-          class="text-reset me-3 dropdown-toggle hidden-arrow"
-          href="#"
-          id="navbarDropdownMenuLink"
-          role="button"
-          data-mdb-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <i class="far fa-bell"></i>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-          <li>
-            <a class="dropdown-item" href="#">Some news</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">Another news</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </li>
-        </ul>
-
-        <!-- Avatar -->
-        <a
-          class="dropdown-toggle d-flex align-items-center hidden-arrow"
-          href="#"
-          id="navbarDropdownMenuLink"
-          role="button"
-          data-mdb-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <img
-            src="https://mdbootstrap.com/img/new/avatars/2.jpg"
-            class="rounded-circle"
-            height="25"
-            alt=""
-            loading="lazy"
-          />
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-          <li>
-            <a class="dropdown-item" href="#">My profile</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">Settings</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">Logout</a>
-          </li>
-        </ul>
-      </div>
-      <!-- Right elements -->
-    </div>
-    <!-- Container wrapper -->
-  </nav>
-  <!-- Navbar -->
-</header>
-<!-- Navigation -->
-
-<!-- Content -->
-<main>
-
-  <div class="container-fluid px-5 my-5 py-5">
-
-    <h2 class="mb-4 pb-3">Dashboard</h2>
-
-    <div class="rounded-6" style="height: 600px; border: 3px dashed #ddd;"></div>
-
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+      <li><a class="dropdown-item" href="/adminpanel/user/edit/?pk={{current_user.pk}}">Мой
+        Профиль</a></li>
+      <li><a class="dropdown-item" href="/auth/logout">Выйти</a></li>
+    </ul>
+    <a href="/docs" style="position: fixed;right: 16px;top: 37px; z-index: 100">
+      <i class="fas fa-cogs"></i>
+    </a>
+    <button data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1" class="btn shadow-0 p-0 me-3 d-block d-xxl-none"
+            aria-controls="#sidenav-1" aria-haspopup="true">
+      <i class="fas fa-bars fa-lg"></i>
+    </button>
   </div>
+</header>
+<main>
+  <div class="container" style="max-width: 100%;">
+    <section>
+      <div class="card">
+        <div class="card-body">
+          <h1 class="h4 text-center">
+            {{title}}
+          </h1>
+          {% block content %}
 
+          <div class="d-flex justify-content-end">
+            <a href="/adminpanel/{{app}}/edit" class="p-2">
+              <button type="button" class="btn btn-primary mb-4">Добавить</button>
+            </a>
+            <!--            {% if app != 'lib_bookcontent' %}-->
+            <!--            <a href="/api/v1/{{app.replace('_','/')}}/crud?csv=true" class="p-2">-->
+            <!--              <button type="button" class="btn btn-primary mb-4">Скачать</button>-->
+            <!--            </a>-->
+            <!--            {% endif %}-->
+          </div>
+          <div id="datatable" data-mdb-loading="true" data-mdb-stripped="true" data-mdb-hover="true" data-mdb-entries="50"
+               data-mdb-rows-text="Строк на странице"></div>
+          {% endblock %}
+        </div>
+      </div>
+    </section>
+  </div>
 </main>
-<!-- Content -->
-    <!-- MDB -->
-    <script type="text/javascript" src="js/mdb.min.js"></script>
-    <!-- Custom scripts -->
-    <script type="text/javascript" src="js/script.js"></script>
+
+{% block app %}
+<script>
+  const app = '{{app}}'
+</script>
+{% endblock %}
+
+<script type="text/javascript" src="/static/libs/mdb/js/mdb.min.js"></script>
+<script type="text/javascript" src="/static/libs/mdb/plugins/js/all.min.js"></script>
+
+<script type="text/javascript" src="/static/js/left_nav.js"></script>
+<script type="text/javascript" src="/static/js/table_view.js"></script>
+<script type="text/javascript" src="/static/js/edit_page.js"></script>
 </body>
 </html>
-

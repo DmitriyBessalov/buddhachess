@@ -8,7 +8,7 @@ from app.shemas import auth as schemas_auth
 from app.models import user as models_user
 from app.services import auth as servises_auth
 
-from app.routers.base import HTTP_Error
+from app.routers.http_error import HTTP_Error
 
 router = APIRouter()
 
