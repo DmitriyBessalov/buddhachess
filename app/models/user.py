@@ -1,16 +1,16 @@
-from sqlalchemy import Column, String, Boolean
-from app.db.db import Base
+from pydantic import EmailStr
+from sqlmodel import SQLModel, Field
+from sqlalchemy import Column, String
 
 
-class User(Base):
-    __tablename__ = "user"
+class User(SQLModel, table=True):
+    username: str = Field(primary_key=True, nullable=False)
+    email: EmailStr = Field(sa_column=Column("email", String, unique=True))
+    hashed_password: str
+    is_active: bool = Field(default=True)
+    is_verified: bool = Field(default=False)
+    group: str = Field(default='gamer')
 
-    username = Column(String, primary_key=True, unique=True)
-    email = Column(String, unique=True)
-    hashed_password = Column(String)
-    is_active = Column(Boolean, default=True)
-    is_verified = Column(Boolean, default=False)
-    group = Column(String, default='gamer')
     # date_birthday = Column(DateTime)
     # phone = models.IntegerField(verbose_name="Телефон", blank=True, null=True)
     # telegram = Column(String, unique=True)
