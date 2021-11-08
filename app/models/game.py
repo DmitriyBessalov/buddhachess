@@ -6,13 +6,13 @@ class Game(SQLModel, table=True):
     id: Optional[int] = Field(primary_key=True)
     chess_variant_id: int = Field(nullable=False)
     position: int
-    user_id_while: int = Field(nullable=False)
-    user_id_black: int = Field(nullable=False)
+    while_user_id: int = Field(nullable=False)
+    black_user_id: int = Field(nullable=False)
     status_id: int = Field(nullable=False)
     moves: str
 
 
-class GameChessVariant(SQLModel, table=True):
+class Game_Chess_Variant(SQLModel, table=True):
     id: Optional[int] = Field(primary_key=True)
     chess_variant: str
 
@@ -26,7 +26,7 @@ class GameChessVariant(SQLModel, table=True):
     # ]
 
 
-class GameStatus(SQLModel, table=True):
+class Game_Status(SQLModel, table=True):
     id: Optional[int] = Field(primary_key=True)
     status: str
 
