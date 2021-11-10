@@ -1,20 +1,20 @@
-from typing import Optional
-from sqlmodel import SQLModel, Field
+# from sqlalchemy import Column, Integer
+# from app.db import Base
 
-
-class Game(SQLModel, table=True):
-    id: Optional[int] = Field(primary_key=True)
-    chess_variant_id: int = Field(nullable=False)
-    position: int
-    while_user_id: int = Field(nullable=False)
-    black_user_id: int = Field(nullable=False)
-    status_id: int = Field(nullable=False)
-    moves: str
-
-
-class Game_Chess_Variant(SQLModel, table=True):
-    id: Optional[int] = Field(primary_key=True)
-    chess_variant: str
+#
+# class Game(Base):
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     chess_variant_id = Column(Integer)
+#     position = int
+#     while_user_id = Column(Integer)
+#     black_user_id = Column(Integer)
+#     status_id = Column(Integer)
+#     moves = str
+#
+#
+# class GameChessVariant(Base):
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     chess_variant: str
 
     #  = [
     #     (1, 'Инь-Ян'),
@@ -26,9 +26,9 @@ class Game_Chess_Variant(SQLModel, table=True):
     # ]
 
 
-class Game_Status(SQLModel, table=True):
-    id: Optional[int] = Field(primary_key=True)
-    status: str
+# class GameStatus(Base):
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     status: str
 
     # status = [
     #     (0, 'Ход белых'),
