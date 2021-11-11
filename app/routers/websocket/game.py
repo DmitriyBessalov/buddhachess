@@ -1,3 +1,7 @@
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from routers.api.v1.auth import create_or_get_anonimous_token
+from services.websocket import ConnectionManager
+from app.settings import settings
 from random import randint
 import json
 import ast
@@ -32,7 +36,7 @@ async def listgames(remove_ws_session_id: int = 0):
 
 @router.websocket("/create/{ws_session_id}/{access_token}")
 async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_token: str, group_id: int = 0):
-    username = await create_anonimous_token(access_token)
+    username = await create_or_get_anonimous_token(access_token)
     await manager.connect(websocket, group_id, ws_session_id)
     try:
         while True:
@@ -101,7 +105,7 @@ async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_to
 
 @router.websocket("/{game_id}/{access_token}")
 async def websocket_endpoint(websocket: WebSocket, game_id: int, access_token: str):
-    # username = await create_anonimous_token(access_token)
+    username = await create_or_get_anonimous_token(access_token)
     ws_session_id = randint(10 ** 10, 10 ** 11)
     await manager.connect(websocket, game_id, ws_session_id)
     try:

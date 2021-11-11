@@ -17,8 +17,8 @@ class User(ormar.Model):
     username: str = ormar.String(unique=True, max_length=31)
     password: str = ormar.String(pydantic_only=True, max_length=31)
     hashed_password: str = ormar.String(max_length=127)
-    is_active: bool = ormar.Boolean()
-    is_verified: bool = ormar.Boolean()
+    is_active: bool = ormar.Boolean(default=False)
+    is_verified: bool = ormar.Boolean(default=False)
     group: str = ormar.String(default='gamer', max_length=7)
 
     # date_birthday = Column(DateTime)
