@@ -1,18 +1,9 @@
 import ormar
 from pydantic import EmailStr
-from app.db import database, metadata
+from app.models.base import BaseModel
 
 
-class MainMeta(ormar.ModelMeta):
-    metadata = metadata
-    database = database
-
-
-class User(ormar.Model):
-    class Meta(MainMeta):
-        pass
-
-    id: int = ormar.Integer(primary_key=True, autoincrement=True)
+class User(BaseModel):
     email: EmailStr = ormar.String(unique=True, max_length=31)
     username: str = ormar.String(unique=True, max_length=31)
     password: str = ormar.String(pydantic_only=True, max_length=31)
