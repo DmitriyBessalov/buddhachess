@@ -1,28 +1,19 @@
 from random import randint
+
+import databases
 from fastapi import APIRouter, Depends, Request, Response
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from starlette.responses import RedirectResponse
 from app.shemas import auth as schemas_auth
+from app.services.send_email import send_email
 from app.services import auth as servises_auth
 from app.services.http_error import HTTP_Error
-from app.models.user import User
+from app.models.user import user_table
 from app.db import database
 
 router = APIRouter()
-
-
-@router.on_event("startup")
-async def startup() -> None:
-    if not database.is_connected:
-        await database.connect()
-
-
-@router.on_event("shutdown")
-async def shutdown() -> None:
-    if database.is_connected:
-        await database.disconnect()
 
 
 @router.post("/register")
@@ -30,23 +21,23 @@ async def user_create(request: Request, user: schemas_auth.UserRegister):
     if user.username.find("@") != -1:
         return HTTP_Error("username", "Username cannot contain '@'")
 
-    db_user = await User.objects.get_or_none(username=user.username)
+    db_user = await database.fetch_one(query=user_table.select().where(user_table.username == user.username))
     if db_user is not None:
         return HTTP_Error("username", "Username already in use")
 
-    db_user = await User.objects.get_or_none(email=user.email)
+    db_user = await database.fetch_one(query=user_table.select().where(user_table.email == user.email))
     if db_user is not None:
         return HTTP_Error("email", "Email already in use")
 
-    hashed_password = CryptContext(schemes='bcrypt', deprecated="auto").hash(user.password)
+    hashed_password = CryptContext(schemes='bcrypt', deprecated="auto").hash(user_table.password)
 
-    await User.objects.create(
+    await user_table.insert().values(
         username=user.username,
         email=user.email,
         hashed_password=hashed_password,
     )
 
-    await servises_auth.send_email(
+    await send_email(
         "new_account",
         'Подтвердите регистрацию на сайте "Шахматы Будды"',
         request,
@@ -97,8 +88,10 @@ async def password_update(response: Response, password: schemas_auth.DoublePassw
 
 @router.patch("/verify_activation")
 async def verify_email(user: schemas_auth.User = Depends(servises_auth.get_current_user)):
-    db_user = User.objects.update(username=user.username, is_verified=True).one()
-    user.is_verified = True
+    # .filter(username=user.username)
+
+    db_user = await User.objects.update(is_verified=True)
+
     return jsonable_encoder(db_user)
 
 
@@ -108,7 +101,7 @@ async def reset_password(username: schemas_auth.ResetPassword, request: Request)
     if db_user is None:
         return HTTP_Error("username", "User not Found")
 
-    response = await servises_auth.send_email(
+    response = await send_email(
         "reset_password",
         'Сброс пароля на сайте "Шахматы Будды"',
         request,

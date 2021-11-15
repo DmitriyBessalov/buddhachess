@@ -8,8 +8,20 @@ from app.routers.web.article import router as router_article
 from app.routers.web.base import router as router_base
 from app.routers.web.game import router as router_game
 from app.routers.websocket.game import router as router_game_websocket
+from app.db import database
 
 app = FastAPI()
+
+
+@app.on_event("startup")
+async def startup():
+    await database.connect()
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
+
 app.include_router(router_base, prefix="", tags=['base'])
 app.include_router(router_auth, prefix="/{lang}/auth", tags=["auth"],)
 app.include_router(router_auth_api, prefix="/api/auth", tags=["auth_api"],)

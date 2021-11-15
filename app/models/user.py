@@ -1,18 +1,20 @@
-import ormar
-from pydantic import EmailStr
-from app.models.base import BaseModel
+from sqlalchemy import Column, String, Integer, Boolean
+from app.db import Base
 
 
-class User(BaseModel):
-    email: EmailStr = ormar.String(unique=True, max_length=31)
-    username: str = ormar.String(unique=True, max_length=31)
-    password: str = ormar.String(pydantic_only=True, max_length=31)
-    hashed_password: str = ormar.String(max_length=127)
-    is_active: bool = ormar.Boolean(default=False)
-    is_verified: bool = ormar.Boolean(default=False)
-    group: str = ormar.String(default='gamer', max_length=7)
+class User(Base):
+    __tablename__ = "user"
 
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String, unique=True)
+    email = Column(String, unique=True)
+    hashed_password = Column(String)
+    is_active = Column(Boolean, default=True)
+    is_verified = Column(Boolean, default=False)
+    group = Column(String, default='gamer')
     # date_birthday = Column(DateTime)
-    # phone = models.IntegerField(verbose_name="Телефон", blank=True, null=True)
     # telegram = Column(String, unique=True)
     # ava = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Аватар", blank=True, null=True)
+
+
+user_table = User.__table__

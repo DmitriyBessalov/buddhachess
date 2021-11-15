@@ -1,24 +1,33 @@
-import ormar
-from app.models.base import BaseModel
+from sqlalchemy import Column, String, Integer, Boolean
+from app.db import Base
 import time
 
 
-class Game(BaseModel):
-    start_position: int = ormar.Integer()
-    while_user_id: int = ormar.Integer()
-    black_user_id: int = ormar.Integer()
-    status_id: int = ormar.Integer()
-    moves: str = ormar.String(max_length=2047)
-    move_time: int = ormar.Integer(default=80)
-    move_time_end: int = ormar.Integer(default=round(time.time()+400))
-    while_time_end: int = ormar.Integer(default=800)
-    black_time_end: int = ormar.Integer(default=800)
+class Game(Base):
+    __tablename__ = "game"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    start_position = Column(Integer)
+    while_user_id = Column(Integer)
+    black_user_id = Column(Integer)
+    status_id = Column(Integer)
+    moves = Column(String)
+    move_time = Column(Integer, default=80)
+    move_time_end = Column(Integer, default=round(time.time()+400))
+    while_time_end = Column(Integer, default=800)
+    black_time_end = Column(Integer, default=800)
 
 
-class Game_Start_Position(BaseModel):
-    chess_variant: str = ormar.String(max_length=15)
-    position: int = ormar.Integer(maximum=960)
-    position_FEN: str = ormar.String(max_length=127)
+game_table = Game.__table__
+
+
+class GameStartPosition(Base):
+    __tablename__ = "game_start_position"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    chess_variant = Column(String)
+    position = Column(Integer)
+    position_FEN = Column(String)
 
     #  = [
     #     (1, 'Инь-Ян'),
@@ -30,8 +39,14 @@ class Game_Start_Position(BaseModel):
     # ]
 
 
-class Game_Status(BaseModel):
-    status: str
+game_start_position_table = GameStartPosition.__table__
+
+
+class GameStatus(Base):
+    __tablename__ = "game_status"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    status = Column(String)
 
     # status = [
     #     (0, 'Ход белых'),
@@ -45,3 +60,6 @@ class Game_Status(BaseModel):
     #     (8, 'Пат'),
     #     (9, 'Ничья'),
     # ]
+
+
+game_status_table = GameStatus.__table__

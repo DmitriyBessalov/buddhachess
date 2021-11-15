@@ -9,6 +9,8 @@ authForm.onsubmit = async (e) => {
     response,
     form_valid = true
 
+    console.log(JSON.stringify(value))
+
   if (action === 'token')
     response = await fetch(e.path[0].action, {
       method: e.path[0].method,
@@ -48,7 +50,6 @@ authForm.onsubmit = async (e) => {
         break
       case 'token':
         localStorage.setItem('username', result.username)
-        localStorage.setItem('access_token', result.access_token)
         if (loginCheck.checked) {
           localStorage.setItem('password', value.password)
         }
