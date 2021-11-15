@@ -17,4 +17,4 @@ class User(Base):
     # ava = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Аватар", blank=True, null=True)
 
 
-user_table = User.__table__
+table_user = User.__table__

@@ -18,7 +18,7 @@ class Game(Base):
     black_time_end = Column(Integer, default=800)
 
 
-game_table = Game.__table__
+table_game = Game.__table__
 
 
 class GameStartPosition(Base):
@@ -39,7 +39,7 @@ class GameStartPosition(Base):
     # ]
 
 
-game_start_position_table = GameStartPosition.__table__
+table_game_start_position = GameStartPosition.__table__
 
 
 class GameStatus(Base):
@@ -62,4 +62,4 @@ class GameStatus(Base):
     # ]
 
 
-game_status_table = GameStatus.__table__
+table_game_status = GameStatus.__table__

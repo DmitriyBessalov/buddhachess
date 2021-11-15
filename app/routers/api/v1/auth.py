@@ -1,6 +1,5 @@
 from random import randint
 
-import databases
 from fastapi import APIRouter, Depends, Request, Response
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
@@ -10,7 +9,7 @@ from app.shemas import auth as schemas_auth
 from app.services.send_email import send_email
 from app.services import auth as servises_auth
 from app.services.http_error import HTTP_Error
-from app.models.user import user_table
+from app.models.user import table_user
 from app.db import database
 
 router = APIRouter()
@@ -21,17 +20,17 @@ async def user_create(request: Request, user: schemas_auth.UserRegister):
     if user.username.find("@") != -1:
         return HTTP_Error("username", "Username cannot contain '@'")
 
-    db_user = await database.fetch_one(query=user_table.select().where(user_table.username == user.username))
+    db_user = await database.fetch_one(query=table_user.select().where(table_user.username == user.username))
     if db_user is not None:
         return HTTP_Error("username", "Username already in use")
 
-    db_user = await database.fetch_one(query=user_table.select().where(user_table.email == user.email))
+    db_user = await database.fetch_one(query=table_user.select().where(table_user.email == user.email))
     if db_user is not None:
         return HTTP_Error("email", "Email already in use")
 
-    hashed_password = CryptContext(schemes='bcrypt', deprecated="auto").hash(user_table.password)
+    hashed_password = CryptContext(schemes='bcrypt', deprecated="auto").hash(table_user.password)
 
-    await user_table.insert().values(
+    await table_user.insert().values(
         username=user.username,
         email=user.email,
         hashed_password=hashed_password,
