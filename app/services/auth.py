@@ -1,10 +1,10 @@
-from fastapi import Depends, HTTPException, Request
+from fastapi import Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 from app.services.base_auth import OAuth2PasswordBearerCookie
 from starlette.responses import RedirectResponse
-
-from app.models.user import User
 from app.settings import settings
+from app.models.user import table_user
+from app.db import database
 
 import jwt
 
@@ -27,9 +27,11 @@ async def create_token_anonimous(username: str):
 
 async def get_user_from_username_or_email(username: str):
     if username.find("@") != -1:
-        db_user = await User.objects.get_or_none(email=username)
+        db_user = await database.fetch_one(
+            query=table_user.select().where(table_user.c.email == username)
+        )
     else:
-        db_user = await User.objects.get_or_none(username=username)
+        db_user = await database.fetch_one(query=table_user.select().where(table_user.c.username == username))
     return db_user
 
 oauth2_scheme = OAuth2PasswordBearerCookie(tokenUrl="/api/auth/token")
@@ -46,7 +48,7 @@ async def get_current_user(
             return {'username': payload["username"],
                     'access_token_anonimous': token}
 
-        db_user = await User.objects.get(username=payload["username"])
+        db_user = await database.fetch_one(query=table_user.select().where(table_user.c.username == payload["username"]))
 
         if db_user.hashed_password != payload["hashed_password"]:
             return RedirectResponse("/auth/login", status_code=302)

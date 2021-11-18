@@ -1,5 +1,4 @@
 from random import randint
-
 from fastapi import APIRouter, Depends, Request, Response
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
@@ -20,11 +19,11 @@ async def user_create(request: Request, user: schemas_auth.UserRegister):
     if user.username.find("@") != -1:
         return HTTP_Error("username", "Username cannot contain '@'")
 
-    db_user = await database.fetch_one(query=table_user.select().where(table_user.username == user.username))
+    db_user = await database.fetch_one(query=table_user.select().where(table_user.c.username == user.username))
     if db_user is not None:
         return HTTP_Error("username", "Username already in use")
 
-    db_user = await database.fetch_one(query=table_user.select().where(table_user.email == user.email))
+    db_user = await database.fetch_one(query=table_user.select().where(table_user.c.email == user.email))
     if db_user is not None:
         return HTTP_Error("email", "Email already in use")
 
@@ -76,8 +75,11 @@ async def user_info(user: schemas_auth.User = Depends(servises_auth.get_current_
 @router.patch("/password")
 async def password_update(response: Response, password: schemas_auth.DoublePassword, user: schemas_auth.User = Depends(servises_auth.get_current_user)):
     hashed_password = CryptContext(schemes='bcrypt', deprecated="auto").hash(password.password)
-
-    db_user = User.objects.update(username=user.username, hashed_password=hashed_password).one()
+    db_user = await database.execute(
+        table_user.update()
+        .where(table_user.c.username == user.username)
+        .values(table_user=hashed_password)
+    )
 
     auth = await servises_auth.create_token(db_user.username, db_user.hashed_password)
     res = RedirectResponse("/", status_code=302)
@@ -87,10 +89,11 @@ async def password_update(response: Response, password: schemas_auth.DoublePassw
 
 @router.patch("/verify_activation")
 async def verify_email(user: schemas_auth.User = Depends(servises_auth.get_current_user)):
-    # .filter(username=user.username)
-
-    db_user = await User.objects.update(is_verified=True)
-
+    db_user = await database.execute(
+        table_user.update()
+        .where(table_user.c.username == user.username)
+        .values(is_verified=True)
+    )
     return jsonable_encoder(db_user)
 
 
