@@ -65,8 +65,26 @@
             <i class="fab fa-youtube"></i>
           </a>
         </li>
+        {% if username %}
+        <li class="nav-item me-3 me-lg-0">
+          <div class="container-fluid">
+            <a class="nav-link dropdown-toggle hidden-arrow d-flex align-items-center" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown"
+               aria-expanded="false">
+              <i class="fas fa-user-circle fa-lg"></i>
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+              <li>
+                <a class="dropdown-item" href="#">{{username}}</a>
+              </li>
+              <li><a class="dropdown-item" onclick="document.cookie='Authorization=; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;'; document.location.reload();">Выйти</a></li>
+            </ul>
+          </div>
+        </li>
+
       </ul>
-      {% if not user %}
+      {% else %}
+      </ul>
       <ul class="navbar-nav d-flex flex-row m-1">
         <li class="nav-item me-3 me-lg-0">
           <a href="/ru/auth/login">
@@ -85,8 +103,6 @@
           </a>
         </li>
       </ul>
-      {% else %}
-      <p>{{user}}</p>
       {% endif %}
     </div>
   </div>

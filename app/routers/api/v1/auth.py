@@ -3,7 +3,6 @@ from fastapi import APIRouter, Depends, Request, Response
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
-from starlette.responses import RedirectResponse
 from app.shemas import auth as schemas_auth
 from app.services.send_email import send_email
 from app.services import auth as servises_auth
@@ -56,7 +55,7 @@ async def login(response: Response, user: OAuth2PasswordRequestForm = Depends())
         return HTTP_Error("username", "User not Found")
     if CryptContext(schemes='bcrypt', deprecated="auto").verify(user.password, db_user['hashed_password']):
         res = await servises_auth.create_token(db_user['username'], db_user['hashed_password'])
-        response.set_cookie(key="Authorization", value=f"Bearer {res['access_token']}", max_age=604800, httponly=True)
+        response.set_cookie(key="Authorization", value=f"Bearer {res['access_token']}", max_age=604800)
         return res
     return HTTP_Error("password", "Wrong password")
 
@@ -85,7 +84,7 @@ async def password_update(response: Response, password: schemas_auth.DoublePassw
 
     auth = await servises_auth.create_token(user['username'], hashed_password)
     res = jsonable_encoder(auth)
-    response.set_cookie(key="Authorization", value=f"Bearer {auth['access_token']}", max_age=604800, httponly=True)
+    response.set_cookie(key="Authorization", value=f"Bearer {auth['access_token']}", max_age=604800)
     return res
 
 

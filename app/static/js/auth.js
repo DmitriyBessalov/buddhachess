@@ -66,3 +66,15 @@ authForm.onsubmit = async (e) => {
     }
   }
 }
+
+
+e = document.getElementsByName('username')[0]
+if(e && localStorage.getItem('username') != null){
+  e.value = localStorage.getItem('username')
+  e.classList.add('active')
+}
+e = document.getElementsByName('password')[0]
+if (e && localStorage.getItem('password') != null){
+  e.value = localStorage.getItem('password')
+  e.classList.add('active')
+}

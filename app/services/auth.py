@@ -63,5 +63,5 @@ async def get_current_user(
     return jsonable_encoder(db_user)
 
 
-async def get_current_user_check():
-    return await get_current_user(check=True)
+async def get_current_user_check(token: str = Depends(OAuth2PasswordBearerCookie(tokenUrl="/api/auth/token", check=True))):
+    return await get_current_user(token=token, check=True)
