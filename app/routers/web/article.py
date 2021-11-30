@@ -1,14 +1,16 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
+
+from app.services import auth as servises_auth
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/")
-async def get(request: Request):
-    return templates.TemplateResponse("docs/docs.html", {"request": request})
+async def get(request: Request, user=Depends(servises_auth.get_current_user_check)):
+    return templates.TemplateResponse("docs/docs.html", {"request": request, "user": user['username']})
 
 
 @router.get("/in-yan")

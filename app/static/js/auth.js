@@ -18,7 +18,7 @@ authForm.onsubmit = async (e) => {
     })
   else
     response = await fetch(e.path[0].action, {
-      method: e.path[0].method,
+      method: e.path[0].attributes.method.nodeValue,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + localStorage.getItem('access_token')
@@ -56,7 +56,7 @@ authForm.onsubmit = async (e) => {
         AlertMDB("Вы успешно авторизовались!", "green")
         break
       case 'password':
-        console.log('password')
+        document.location.href = '/'
         break
       case 'reset_password':
         AlertMDB("Письмо отправленно на email", "green")

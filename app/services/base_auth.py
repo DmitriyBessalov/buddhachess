@@ -15,7 +15,9 @@ class OAuth2PasswordBearerCookie(OAuth2):
             scheme_name: str = None,
             scopes: dict = None,
             auto_error: bool = True,
+            check: bool = False,
     ):
+        self.check = check
         if not scopes:
             scopes = {}
         flows = OAuthFlowsModel(password={"tokenUrl": tokenUrl, "scopes": scopes})
@@ -46,7 +48,7 @@ class OAuth2PasswordBearerCookie(OAuth2):
             authorization = False
 
         if not authorization or scheme.lower() != "bearer":
-            if self.auto_error:
+            if self.auto_error and not self.check:
                 raise HTTPException(
                     status_code=HTTP_403_FORBIDDEN, detail="Not authenticated"
                 )

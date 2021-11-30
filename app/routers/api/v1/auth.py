@@ -27,12 +27,14 @@ async def user_create(request: Request, user: schemas_auth.UserRegister):
     if db_user is not None:
         return HTTP_Error("email", "Email already in use")
 
-    hashed_password = CryptContext(schemes='bcrypt', deprecated="auto").hash(table_user.password)
+    hashed_password = CryptContext(schemes='bcrypt', deprecated="auto").hash(user.password)
 
-    await table_user.insert().values(
-        username=user.username,
-        email=user.email,
-        hashed_password=hashed_password,
+    await database.execute(
+        table_user.insert().values(
+            username=user.username,
+            email=user.email,
+            hashed_password=hashed_password,
+        )
     )
 
     await send_email(
@@ -52,8 +54,8 @@ async def login(response: Response, user: OAuth2PasswordRequestForm = Depends())
     db_user = await servises_auth.get_user_from_username_or_email(user.username)
     if db_user is None:
         return HTTP_Error("username", "User not Found")
-    if CryptContext(schemes='bcrypt', deprecated="auto").verify(user.password, db_user.hashed_password):
-        res = await servises_auth.create_token(db_user.username, db_user.hashed_password)
+    if CryptContext(schemes='bcrypt', deprecated="auto").verify(user.password, db_user['hashed_password']):
+        res = await servises_auth.create_token(db_user['username'], db_user['hashed_password'])
         response.set_cookie(key="Authorization", value=f"Bearer {res['access_token']}", max_age=604800, httponly=True)
         return res
     return HTTP_Error("password", "Wrong password")
@@ -72,29 +74,30 @@ async def user_info(user: schemas_auth.User = Depends(servises_auth.get_current_
     return user
 
 
-@router.patch("/password")
-async def password_update(response: Response, password: schemas_auth.DoublePassword, user: schemas_auth.User = Depends(servises_auth.get_current_user)):
+@router.post("/password")
+async def password_update(response: Response, password: schemas_auth.DoublePassword, user=Depends(servises_auth.get_current_user)):
     hashed_password = CryptContext(schemes='bcrypt', deprecated="auto").hash(password.password)
-    db_user = await database.execute(
-        table_user.update()
-        .where(table_user.c.username == user.username)
-        .values(table_user=hashed_password)
+    await database.execute(
+       table_user.update()
+           .where(table_user.c.username == user['username'])
+           .values(hashed_password=hashed_password)
     )
 
-    auth = await servises_auth.create_token(db_user.username, db_user.hashed_password)
-    res = RedirectResponse("/", status_code=302)
+    auth = await servises_auth.create_token(user['username'], hashed_password)
+    res = jsonable_encoder(auth)
     response.set_cookie(key="Authorization", value=f"Bearer {auth['access_token']}", max_age=604800, httponly=True)
     return res
 
 
 @router.patch("/verify_activation")
-async def verify_email(user: schemas_auth.User = Depends(servises_auth.get_current_user)):
-    db_user = await database.execute(
+async def verify_email(user=Depends(servises_auth.get_current_user)):
+    await database.execute(
         table_user.update()
-        .where(table_user.c.username == user.username)
-        .values(is_verified=True)
+            .where(table_user.c.username == user['username'])
+            .values(is_verified=True)
     )
-    return jsonable_encoder(db_user)
+    user['is_verified'] = True
+    return jsonable_encoder(user)
 
 
 @router.post("/reset_password")
@@ -107,9 +110,9 @@ async def reset_password(username: schemas_auth.ResetPassword, request: Request)
         "reset_password",
         'Сброс пароля на сайте "Шахматы Будды"',
         request,
-        db_user.username,
-        db_user.email,
-        db_user.hashed_password
+        db_user['username'],
+        db_user['email'],
+        db_user['hashed_password']
     )
 
     return {'send_mail': response}

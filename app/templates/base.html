@@ -66,6 +66,7 @@
           </a>
         </li>
       </ul>
+      {% if not user %}
       <ul class="navbar-nav d-flex flex-row m-1">
         <li class="nav-item me-3 me-lg-0">
           <a href="/ru/auth/login">
@@ -84,6 +85,9 @@
           </a>
         </li>
       </ul>
+      {% else %}
+      <p>{{user}}</p>
+      {% endif %}
     </div>
   </div>
 </nav>
