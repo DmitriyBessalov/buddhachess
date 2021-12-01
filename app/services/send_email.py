@@ -1,7 +1,7 @@
 from fastapi import Request
 from pathlib import Path
 from app.settings import settings
-from services.auth import create_token
+from app.services.auth import create_token
 from emails.template import JinjaTemplate
 import emails
 

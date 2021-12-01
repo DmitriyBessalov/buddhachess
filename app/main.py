@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from settings import settings
+from app.settings import settings
 from fastapi.staticfiles import StaticFiles
 from app.routers.api.v1.auth import router as router_auth_api
 from app.routers.web.auth import router as router_auth

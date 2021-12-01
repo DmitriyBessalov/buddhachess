@@ -1,6 +1,6 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from routers.api.v1.auth import create_or_get_anonimous_token
-from services.websocket import ConnectionManager
+from app.routers.api.v1.auth import create_or_get_anonimous_token
+from app.services.websocket import ConnectionManager
 from app.settings import settings
 from random import randint
 import json
