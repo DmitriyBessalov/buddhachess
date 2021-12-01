@@ -36,7 +36,7 @@ app.include_router(router_article, prefix="/{lang}/docs", tags=['article'])
 app.include_router(router_game, prefix="/{lang}/game", tags=['game'])
 app.include_router(router_game_websocket, prefix="/ws/game", tags=['game_websocket'])
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
-app.mount("/media", StaticFiles(directory="app/media"), name="media")
+# app.mount("/media", StaticFiles(directory="app/media"), name="media")
 
 
 if __name__ == "__main__":
