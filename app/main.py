@@ -10,9 +10,6 @@ from app.routers.web.game import router as router_game
 from app.routers.websocket.game import router as router_game_websocket
 from app.db import database
 
-from app.routers.web.dna import router as router_dna
-from app.routers.api.v1.dna import router as router_dna_api
-
 app = FastAPI()
 
 
@@ -28,10 +25,6 @@ async def shutdown():
 app.include_router(router_base, prefix="", tags=['base'])
 app.include_router(router_auth, prefix="/{lang}/auth", tags=["auth"],)
 app.include_router(router_auth_api, prefix="/api/auth", tags=["auth_api"],)
-
-app.include_router(router_dna, prefix="/dna", tags=["dna"],)
-app.include_router(router_dna_api, prefix="/api/dna", tags=["dna_api"],)
-
 app.include_router(router_article, prefix="/{lang}/docs", tags=['article'])
 app.include_router(router_game, prefix="/{lang}/game", tags=['game'])
 app.include_router(router_game_websocket, prefix="/ws/game", tags=['game_websocket'])
