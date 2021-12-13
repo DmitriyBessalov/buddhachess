@@ -1,5 +1,10 @@
 from fastapi import WebSocket
 
+import redis
+from app.settings import settings
+r1 = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=1)
+r2 = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=2)
+
 
 class ConnectionManager:
     def __init__(self):

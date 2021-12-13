@@ -65,7 +65,7 @@ async def create_or_get_anonimous_token(token: str = 'null'):
     if token == "undefined" or token == "null":
         return await servises_auth.create_token_anonimous('Anonimous_' + str(randint(1000000, 9999999)))
     else:
-        return await servises_auth.get_current_user(token, True)
+        return await servises_auth.get_current_user(token)
 
 
 @router.get("/me")

@@ -1,10 +1,8 @@
 from typing import Optional
-from fastapi import HTTPException
 from fastapi.security import OAuth2
 from fastapi.security.utils import get_authorization_scheme_param
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 
-from starlette.status import HTTP_403_FORBIDDEN
 from starlette.requests import Request
 
 
@@ -48,10 +46,5 @@ class OAuth2PasswordBearerCookie(OAuth2):
             authorization = False
 
         if not authorization or scheme.lower() != "bearer":
-            if self.auto_error and not self.check:
-                raise HTTPException(
-                    status_code=HTTP_403_FORBIDDEN, detail="Not authenticated"
-                )
-            else:
-                return None
+            return None
         return param

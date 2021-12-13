@@ -29,7 +29,7 @@ async function auth_session() {
     }
   } else {
     if (localStorage.getItem("access_token") === null) {
-      response = await fetch('/api/auth/create_anonimous_token?token='+localStorage.getItem("anonimous_access_token"))
+      response = await fetch('/api/auth/create_or_get_anonimous_token?token='+localStorage.getItem("anonimous_access_token"))
     } else {
       response = await fetch('/api/auth/me',
         {

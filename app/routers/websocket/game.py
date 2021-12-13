@@ -1,14 +1,10 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from app.routers.api.v1.auth import create_or_get_anonimous_token
-from app.services.websocket import ConnectionManager
-from app.settings import settings
+from app.services.websocket import ConnectionManager, r1, r2
 from random import randint
 import json
 import ast
-import redis
 
-r1 = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=1)
-r2 = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=2)
 
 router = APIRouter()
 
@@ -36,7 +32,7 @@ async def listgames(remove_ws_session_id: int = 0):
 
 @router.websocket("/create/{ws_session_id}/{access_token}")
 async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_token: str, group_id: int = 0):
-    username = await create_or_get_anonimous_token(access_token)
+    user = await create_or_get_anonimous_token(access_token)
     await manager.connect(websocket, group_id, ws_session_id)
     try:
         while True:
@@ -55,7 +51,7 @@ async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_to
                     "game_id": game_id,
                     "chess_variant": ws_json['chess_variant'],
                     "color": ws_json['color'],
-                    "user": username['username'],
+                    "user": user['username'],
                     "ws_session_id": ws_session_id
                 }
 
@@ -78,7 +74,7 @@ async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_to
                 game = r1.get('game_' + str(ws_json['game_id']))
                 game = ast.literal_eval(game.decode("utf-8"))
 
-                if game['user'] != username['username']:
+                if game['user'] != user['username']:
                     r1.delete('game_' + str(ws_json['game_id']))
 
                     response_data = {"cmd": "join_game", "game_id": ws_json['game_id']}
@@ -86,10 +82,10 @@ async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_to
 
                     if game['color'] == "true":
                         game["user_white"] = game["user"]
-                        game["user_black"] = username['username']
+                        game["user_black"] = user['username']
                     else:
                         game["user_black"] = game['user']
-                        game["user_white"] = username['username']
+                        game["user_white"] = user['username']
 
                     del game["ws_session_id"]
                     del game["user"]
@@ -105,7 +101,7 @@ async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_to
 
 @router.websocket("/{game_id}/{access_token}")
 async def websocket_endpoint(websocket: WebSocket, game_id: int, access_token: str):
-    username = await create_or_get_anonimous_token(access_token)
+    user = await create_or_get_anonimous_token(access_token)
     ws_session_id = randint(10 ** 10, 10 ** 11)
     await manager.connect(websocket, game_id, ws_session_id)
     try:
