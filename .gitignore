@@ -1,3 +1,5 @@
 .idea
 .env
 poetry.lock
+/планы
+/note

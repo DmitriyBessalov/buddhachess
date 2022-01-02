@@ -55,8 +55,8 @@ wsReady = () => {
         let listGames = ''
         let MylistGames = ''
         for (key in message.list_games) {
-          // console.log(message.list_games[key].user, sessionStorage.getItem('username'))
-          if (message.list_games[key].user === sessionStorage.getItem('username')) {
+          // console.log(message.list_games[key].user, localStorage.getItem('username'))
+          if (message.list_games[key].user === localStorage.getItem('username')) {
             MylistGames += '<div class="border rounded-2 p-3 mt-3 text-start" id="game_id_' + message.list_games[key].game_id + '">\
               <div class="d-flex justify-content-between">\
                 <p>\

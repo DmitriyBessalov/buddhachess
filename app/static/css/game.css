@@ -14,102 +14,30 @@ piece {
     /*pointer-events: none;*/
 }
 
-piece.black.pawn {
-    background-image: url('/static/img/game/p.svg');
-}
-
-piece.black.rook {
-    background-image: url('/static/img/game/r.svg');
-}
-
-piece.black.knight {
-    background-image: url('/static/img/game/n.svg');
-}
-
-piece.black.bishop {
-    background-image: url('/static/img/game/b.svg');
-}
-
-piece.black.queen {
-    background-image: url('/static/img/game/q.svg');
-}
-
-piece.black.king {
-    background-image: url('/static/img/game/k.svg');
-}
-
-piece.white.pawn {
-    background-image: url('/static/img/game/P.svg');
-}
-
-piece.white.rook {
-    background-image: url('/static/img/game/R.svg');
-}
-
-piece.white.knight {
-    background-image: url('/static/img/game/N.svg');
-}
-
-piece.white.bishop {
-    background-image: url('/static/img/game/B.svg');
-}
-
-piece.white.queen {
-    background-image: url('/static/img/game/Q.svg');
-}
-
-piece.white.king {
-    background-image: url('/static/img/game/K.svg');
-}
-
-/***************/
-piece.black.heavy-pawn {
-    background-image: url('/static/img/game/h.svg');
-}
-
-piece.black.regal-pawn {
-    background-image: url('/static/img/game/e.svg');
-}
-
-piece.black.archbishop {
-    background-image: url('/static/img/game/a.svg');
-}
-
-piece.black.pegasus {
-    background-image: url('/static/img/game/g.svg');
-}
-
-piece.black.centaur {
-    background-image: url('/static/img/game/t.svg');
-}
-
-piece.black.chancellor {
-    background-image: url('/static/img/game/c.svg');
-}
-
-piece.white.heavy-pawn {
-    background-image: url('/static/img/game/H.svg');
-}
-
-piece.white.regal-pawn {
-    background-image: url('/static/img/game/E.svg');
-}
-
-piece.white.archbishop {
-    background-image: url('/static/img/game/A.svg');
-}
-
-piece.white.pegasus {
-    background-image: url('/static/img/game/G.svg');
-}
-
-piece.white.centaur {
-    background-image: url('/static/img/game/T.svg');
-}
-
-piece.white.chancellor {
-    background-image: url('/static/img/game/C.svg');
-}
+piece.p {background-image: url('/static/img/game/p.svg');}
+piece.r {background-image: url('/static/img/game/r.svg');}
+piece.n {background-image: url('/static/img/game/n.svg');}
+piece.b {background-image: url('/static/img/game/b.svg');}
+piece.q {background-image: url('/static/img/game/q.svg');}
+piece.k {background-image: url('/static/img/game/k.svg');}
+piece.P {background-image: url('/static/img/game/P.svg');}
+piece.R {background-image: url('/static/img/game/R.svg');}
+piece.N {background-image: url('/static/img/game/N.svg');}
+piece.B {background-image: url('/static/img/game/B.svg');}
+piece.Q {background-image: url('/static/img/game/Q.svg');}
+piece.K {background-image: url('/static/img/game/K.svg');}
+piece.h {background-image: url('/static/img/game/h.svg');}
+piece.e {background-image: url('/static/img/game/e.svg');}
+piece.a {background-image: url('/static/img/game/a.svg');}
+piece.g {background-image: url('/static/img/game/g.svg');}
+piece.t {background-image: url('/static/img/game/t.svg');}
+piece.c {background-image: url('/static/img/game/c.svg');}
+piece.H {background-image: url('/static/img/game/H.svg');}
+piece.E {background-image: url('/static/img/game/E.svg');}
+piece.A {background-image: url('/static/img/game/A.svg');}
+piece.G {background-image: url('/static/img/game/G.svg');}
+piece.T {background-image: url('/static/img/game/T.svg');}
+piece.C {background-image: url('/static/img/game/C.svg');}
 
 piece.dragover {
     opacity: 0.2;
@@ -157,7 +85,6 @@ div.oc.move-dest {
 div.move-dest.hover {
     background: radial-gradient(rgba(20, 85, 30, 0.5) 100%, rgba(0, 0, 0, 0) 100%);
 }
-
 
 /* клетки показывают ходом */
 div.last-move {

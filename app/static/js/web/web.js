@@ -21,7 +21,7 @@ async function auth_session() {
   let
     response,
     user
-  if (sessionStorage.getItem("username") !== null) {
+  if (localStorage.getItem("username") !== null) {
     if (localStorage.getItem("access_token") !== null) {
       access_token = localStorage.getItem("access_token")
     } else {
@@ -45,15 +45,11 @@ async function auth_session() {
       localStorage.removeItem("access_token")
       auth_session()
     } else {
-      sessionStorage.setItem("username", user.username)
+      localStorage.setItem("username", user.username)
       console.log(user)
       if (user.access_token !== undefined) {
         localStorage.setItem("access_token", user.access_token)
         access_token = user.access_token
-      }
-      if (user.access_token_anonimous !== undefined) {
-        localStorage.setItem("access_token_anonimous", user.access_token_anonimous)
-        access_token = user.access_token_anonimous
       }
     }
   }

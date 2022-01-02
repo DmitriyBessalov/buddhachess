@@ -2,9 +2,11 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from app.routers.api.v1.auth import create_or_get_anonimous_token
 from app.services.websocket import ConnectionManager, r1, r2
 from random import randint
+from app.db import database
 import json
 import ast
 
+from models.game import table_game_start_position
 
 router = APIRouter()
 
@@ -47,19 +49,19 @@ async def websocket_endpoint(websocket: WebSocket, ws_session_id: int, access_to
                     ws_json['color'] = str(bool(randint(0, 1))).lower()
 
                 game_id = randint(100000000, 999999999)
+                if ws_json['chess_variant'] == "iy":
+                    response_data['position'] = randint(0, 45)
+                else:
+                    response_data['position'] = 0
+
                 r_dict = {
                     "game_id": game_id,
                     "chess_variant": ws_json['chess_variant'],
                     "color": ws_json['color'],
                     "user": user['username'],
-                    "ws_session_id": ws_session_id
+                    "ws_session_id": ws_session_id,
+                    "position": response_data['position']
                 }
-
-                if ws_json['chess_variant'] == "960":
-                    r_dict["position"] = response_data['position'] = randint(0, 959)
-
-                if ws_json['chess_variant'] == "iy":
-                    r_dict["position"] = response_data['position'] = randint(0, 45)
 
                 r1.set('game_' + str(game_id), json.dumps(r_dict), ex=600)
 
@@ -114,6 +116,15 @@ async def websocket_endpoint(websocket: WebSocket, game_id: int, access_token: s
                 game = r2.get(game_id)
                 response_data = ast.literal_eval(game.decode("utf-8"))
                 response_data['cmd'] = 'join_game'
+
+                position = await database.fetch_one(
+                    query=table_game_start_position.select() \
+                        .where(table_game_start_position.c.chess_variant == response_data['chess_variant']) \
+                        .where(table_game_start_position.c.position == response_data['position'])
+                )
+                position = dict(position.items())
+                response_data["FEN"] = position["FEN"]
+
                 await manager.send_personal_message(json.dumps(response_data), game_id, ws_session_id)
 
             if ws_json['cmd'] == "move":

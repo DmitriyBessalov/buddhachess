@@ -27,15 +27,14 @@ class GameStartPosition(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     chess_variant = Column(String)
     position = Column(Integer)
-    position_FEN = Column(String)
+    FEN = Column(String)
 
     #  = [
+    #     (0, 'Классика'),
     #     (1, 'Инь-Ян'),
     #     (2, 'Фланговая'),
     #     (3, 'Инь-ян / Фланговая'),
     #     (4, 'Инь-ян / Фибоначчи'),
-    #     (5, 'Классические'),
-    #     (6, 'Фишера'),
     # ]
 
 
