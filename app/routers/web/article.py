@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from services import auth as servises_auth
 
 router = APIRouter()
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/")
