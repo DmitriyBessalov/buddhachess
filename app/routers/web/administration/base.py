@@ -4,10 +4,6 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.templating import Jinja2Templates
 
-from sqlalchemy import func
-
-from db import get_session
-
 templates = Jinja2Templates(directory="templates")
 
 router = APIRouter()
@@ -46,7 +42,7 @@ async def edit(
         request: Request,
         app: str, pk: str = None,
         # current_user=Depends(get_current_admin_user),
-        db=Depends(get_session)):
+        ):
     if pk:
         action = 'Редактировать'
     else:
@@ -56,7 +52,6 @@ async def edit(
     story_rubric = dict()
     tags = dict()
     last_date = datetime.date.today()
-
 
     return templates.TemplateResponse("adminpanel/" + app + "_edit.html", context={
         'pk': pk,
