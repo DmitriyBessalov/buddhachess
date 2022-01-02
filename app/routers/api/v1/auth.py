@@ -3,12 +3,12 @@ from fastapi import APIRouter, Depends, Request, Response
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
-from app.shemas import auth as schemas_auth
-from app.services.send_email import send_email
-from app.services import auth as servises_auth
-from app.services.http_error import HTTP_Error
-from app.models.user import table_user
-from app.db import database
+from shemas import auth as schemas_auth
+from services.send_email import send_email
+from services import auth as servises_auth
+from services.http_error import HTTP_Error
+from models.user import table_user
+from db import database
 
 router = APIRouter()
 

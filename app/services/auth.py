@@ -1,9 +1,9 @@
 from fastapi import Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
-from app.services.base_auth import OAuth2PasswordBearerCookie
-from app.settings import settings
-from app.models.user import table_user
-from app.db import database
+from services.base_auth import OAuth2PasswordBearerCookie
+from settings import settings
+from models.user import table_user
+from db import database
 
 import jwt
 

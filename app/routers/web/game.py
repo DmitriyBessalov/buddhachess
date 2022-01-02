@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
-from app.services import auth as servises_auth
+from services import auth as servises_auth
 templates = Jinja2Templates(directory="app/templates")
 
 router = APIRouter()

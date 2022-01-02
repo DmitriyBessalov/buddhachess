@@ -1,4 +1,4 @@
-from app.settings import settings
+from settings import settings
 from sqlalchemy.ext.declarative import declarative_base
 import sqlalchemy
 import databases
